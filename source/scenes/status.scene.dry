@@ -1,0 +1,1483 @@
+title: Status
+new-page: true
+is-special: true
+on-arrival: {!
+    var _newData = [];
+    function _addP(id, legend, seats) {
+        if (seats && seats > 0) _newData.push({ id: id, legend: legend, name: legend, seats: seats });
+    }
+    _addP('slfp', 'SLFP', Q.slfp_r);
+    _addP('slpp', 'SLPP', Q.slpp_r);
+    _addP('slmp', 'SLMP', Q.slmp_r);
+    _addP('unp',  'UNP',  Q.unp_r);
+    _addP('tulf', 'TULF', Q.tulf_r);
+    _addP('pflt', 'PFLT', Q.pflt_r);
+    _addP('actc', 'ACTC', Q.actc_r);
+    _addP('eros', 'EROS', Q.eros_r);
+    _addP('dplf', 'DPLF', Q.dplf_r);
+    _addP('eprlf','EPRLF',Q.eprlf_r);
+    _addP('telo', 'TELO', Q.telo_r);
+    _addP('endlf','ENDLF',Q.endlf_r);
+    _addP('jvp',  'JVP',  Q.jvp_r);
+    _addP('npp',  'NPP',  Q.npp_r);
+    _addP('cpsl', 'CPSL', Q.cpsl_r);
+    _addP('lssp', 'LSSP', Q.lssp_r);
+    _addP('nssp', 'NSSP', Q.nssp_r);
+    _addP('mep',  'MEP',  Q.mep_r);
+    _addP('dunf', 'DUNF', Q.dunf_r);
+    _addP('ulpp', 'ULPP', Q.ulpp_r);
+    _addP('cwc',  'CWC',  Q.cwc_r);
+    _addP('ucpf', 'UCPF', Q.ucpf_r);
+    _addP('slmc', 'SLMC', Q.slmc_r);
+
+    var _newSig = JSON.stringify(_newData.map(function(p){ return p.id + p.seats; }));
+    var _changed = (_newSig !== window._parliSig);
+    window._parliData = _newData;
+    if (_changed) {
+        window._parliSig = _newSig;
+        window._parliAnimate = true;
+    } else {
+        window._parliAnimate = false;
+    }
+!}
+
+= Status
+
+<img src="[+ current_bg +]" style="width: 94%; height: auto; border: 4px solid rgb(43, 43, 43); padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3); display: block; margin: 0 auto;">
+
+Week [+ week +] [+ month : month +] [+ year +] 
+
+<span class="wide_tooltip-wrap">Resources available<span class="wide_tooltip-tip"><img src="img/money_2.jpg">Political capital, party funds, and organizational strength to carry out actions for the party</span></span>: [+ resources +]
+
+SLFP position: [? if slfp_in_government = 0 : Opposition ?][? if slfp_in_government = 1 : In government ?]
+
+[? if slfp_in_government and not in_slfp_majority : Coalition dissent: [+ coalition_dissent : coalition_dissent +] ?]
+
+<span class="wide_tooltip-wrap">Internal dissent<span class="wide_tooltip-tip"><img src="img/logos/SLFP_Logo.png">How severe the bickering between party members has gotten</span></span>: [+ dissent_percent : dissent +]
+
+= Government
+
+[? if state_of_emergency = 1 : <span>**State Of Emergency In Effect**</span> ?]
+
+<span class="wide_tooltip-wrap">President<span class="wide_tooltip-tip">The president is the head of state and head of government in Sri Lanka</span></span>: [+ president +] ([+ president_party +])
+
+[? if slfp_in_government = 1 and (president = "JR Jayawardene" or president = "Ranasinghe Premadasa" ): [+ president +] tensions: [+ president_tension : dissent +] ?]
+
+<span class="wide_tooltip-wrap">Prime Minister<span class="wide_tooltip-tip">The second-highest ranking office in Sri Lanka, after the president and the most senior member of parliament. They can also be the defacto head of government.</span></span>: [+ prime_minister +] ([+ prime_minister_party +])
+
+<span class="wide_tooltip-wrap">Leader of the Opposition<span class="wide_tooltip-tip">Leader of the largest party in parliament, that is not in government</span></span>: [+ opposition_leader +] ([+ opposition_leader_party +])
+
+Current Government: [+ current_gov +]
+
+Parliament composition:
+
+{!<svg id="status_parliament" style="width: 100%; height: 230px; display: block;"></svg>
+<script>
+(function() {
+    if (!d3 || !d3.parliament || !window._parliData || window._parliData.length === 0) return;
+    var el = document.getElementById('status_new_parliament');
+    if (!el) return;
+    var w = el.parentElement.offsetWidth || 220;
+    el.setAttribute('width', w);
+    el.setAttribute('height', Math.round(w * 0.55));
+    var parl = d3.parliament();
+    parl.width(w).height(Math.round(w * 0.55)).innerRadiusCoef(0.4);
+    var animate = window._parliAnimate;
+    parl.enter.fromCenter(animate).smallToBig(animate);
+    parl.exit.toCenter(animate).bigToSmall(animate);
+    d3.select('#status_new_parliament').datum(window._parliData).call(parl);
+})();
+</script>!}
+
+[? if slfp_r >= 1 : <span class="tooltip-text" title="Sri Lanka Freedom Party" style="color: #00008B;">**SLFP**</span>: [+ slfp_r +] ?]
+[? if slpp_formed = 1 and slpp_r >= 1: <span class="tooltip-text" title="Sri Lanka Podujana Peramuna">**SLPP**</span>: [+ slpp_r +] ?]
+[? if slmp_formed = 1 and slmp_r >= 1: <span class="tooltip-text" title="Sri Lanka Mahajana Pakshaya">**SLMP**</span>: [+ slmp_r +] ?]
+[? if unp_r >= 1 : <span class="tooltip-text" title="United National Party" style="color: #006400;">**UNP**</span>: [+ unp_r +] ?]
+[? if tulf_r >= 1 : <span class="tooltip-text" title="Tamil United Liberation Front" style="color: #F7D917;">**TULF**</span>: [+ tulf_r +] ?]
+[? if pflt_formed = 1 and pflt_r >= 1: <span class="tooltip-text" title="Peoples Front of Liberation Tigers">**PFLT**</span>: [+ pflt_r +] ?]
+[? if actc_r >= 1 : <span class="tooltip-text" title="All Ceylon Tamil Congress">**ACTC**</span>: [+ actc_r +] ?]
+[? if eros_formed = 1 and eros_r >= 1 : <span class="tooltip-text" title="Eelam Revolutionary Organisation Of Students">**EROS**</span>: [+ eros_r +] ?]
+[? if dplf_formed = 1 and dplf_r >= 1 : <span class="tooltip-text" title="Democratic Peoples Liberation Front">**DPFL**</span>: [+ dplf_r +] ?]
+[? if eprlf_formed = 1 and eprlf_r >= 1 : <span class="tooltip-text" title=" Eelam Peoples Revolutionary Liberation Front">**EPRLF**</span>: [+ eprlf_r +] ?]
+[? if telo_formed = 1 and telo_r >= 1: <span class="tooltip-text" title=" Tamil Eelam Liberation Organisation">**TELO**</span>: [+ telo_r +] ?]
+[? if endlf_formed = 1 and endlf_r >= 1: <span class="tooltip-text" title=" Eelam National Democratic Liberation Front">**ENDLF**</span>: [+ eprlf_r +] ?]
+[? if jvp_r >= 1 : <span class="tooltip-text" title="Janatha Vimukthi Peramuna">**JVP**</span>: [+ jvp_r +] ?]
+[? if npp_formed = 1 and npp_r >= 1: <span class="tooltip-text" title="National Peoples Power">**NPP**</span>: [+ npp_r +] ?]
+[? if cpsl_r >=1 : <span class="tooltip-text" title="Communist Party of Sri Lanka">**CPSL**</span>: [+ cpsl_r +] ?]
+[? if lssp_r >=1 : <span class="tooltip-text" title="Lanka Sama Samaja Party">**LSSP**</span>: [+ lssp_r +] ?]
+[? if nssp_r >=1 : <span class="tooltip-text" title="Nava Sama Samaja Party">**NSSP**</span>: [+ nssp_r +] ?]
+[? if mep_formed = 1 and mep_r >= 1: <span class="tooltip-text" title="Mahajana Eksath Peramuna">**MEP**</span>: [+ mep_r +] ?]
+[? if dunf_formed = 1 and dunf_r >= 1: <span class="tooltip-text" title="Democratic United National Front">**DUNF**</span>: [+ dunf_r +] ?]
+[? if ulpp_formed = 1 and ulpp_r >= 1: <span class="tooltip-text" title="United Lanka Peoples Party">**ULPP**</span>: [+ ulpp_r +] ?]
+[? if cwc_r >= 1 : <span class="tooltip-text" title="Ceylon Workers Congress" style="color: #E52B50;">**CWC**</span>: [+ cwc_r +] ?]
+[? if ucpf_formed = 1 and ucpf_r >= 1: <span class="tooltip-text" title="Up Country Peoples Front">**UCPF**</span>: [+ ucpf_r +] ?]
+[? if slmc_formed = 1 and slmc_r >= 1: <span class="tooltip-text" title="Sri Lanka Muslim Congress">**SLMC**</span>: [+ slmc_r +] ?]
+
+[? if slfp_in_government = 1 : Budget: [+ budget +] ?]
+
+Next presidential election: [+ next_pres_election_month : month +] [+ next_pres_election_year +]
+
+Next parliamentary election: [+ next_parl_election_month : month +] [+ next_parl_election_year +]
+
+
+@politics
+on-arrival: {!
+Q.coalition_count = Q.active_coalitions ? Q.active_coalitions.length : 0;
+
+for (var i = 0; i < 8; i++) {
+    var c = Q.active_coalitions && Q.active_coalitions[i];
+    if (c) {
+        Q['c' + i + '_name'] = c.name || '';
+        Q['c' + i + '_lead'] = c.lead || '';
+        Q['c' + i + '_color'] = Q.partyColors[c.lead] || '#666';
+        
+        var isGov = (Q.current_gov && Q.current_gov.indexOf(c.lead) !== -1);
+        var csVar = c.lead.toLowerCase() + '_providing_cs';
+        var isCS = Q[csVar] === 1;
+        
+        if (isGov) {
+            Q['c' + i + '_status'] = '● Gov';
+            Q['c' + i + '_statcol'] = '#4CAF50';
+        } else if (isCS) {
+            Q['c' + i + '_status'] = '◐ C&S';
+            Q['c' + i + '_statcol'] = '#FF9800';
+        } else {
+            Q['c' + i + '_status'] = '○ Opp';
+            Q['c' + i + '_statcol'] = '#9E9E9E';
+        }
+        
+        Q['c' + i + '_members'] = c.members ? c.members.join(', ') : '';
+    } else {
+        Q['c' + i + '_name'] = ''; Q['c' + i + '_members'] = '';
+    }
+}
+!}
+
+= Politics
+
+{!<img src="img/politics.jpg" style="width: 70%; height: auto; border: 4px solid rgb(43, 43, 43); padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3); display: block; margin: 0 auto;">!}
+
+= Inter-party Relations
+
+[? if slpp_formed = 1 :  <span class="tooltip-text" title="Sri Lanka Podujana Peramuna" style="color: #E52B50;">**SLPP**</span> : [+ slpp_relation : relationships +]  ?]
+
+[? if slmp_formed = 1 :  <span class="tooltip-text" title="Sri Lanka Mahajana Pakshaya" style="color: #663399;">**SLMP**</span> : [+ slmp_relation : relationships +]  ?]
+
+<span class="tooltip-text" title="United National Party" style="color: #006400;">**UNP**</span> : [+ unp_relation : relationships +] 
+
+<span class="tooltip-text" title="Tamil United Liberation Front" style="color: #F7D917;">**TULF**</span> : [+ tulf_relation : relationships +] 
+
+[? if pflt_formed = 1 :  <span class="tooltip-text" title="Peoples Front of Liberation Tigers" style="color: #DC143C;">**PFLT**</span> : [+ pflt_relation : relationships +]  ?]
+
+<span class="tooltip-text" title="All Ceylon Tamil Congress" style="color: #FDCC01;">**ACTC**</span> : [+ actc_relation : relationships +] 
+
+[? if eros_formed = 1 :  <span class="tooltip-text" title="Eelam Revolutionary Organisation Of Students" style="color: #FF2400;">**EROS**</span> : [+ eros_relation : relationships +]  ?]
+
+[? if dplf_formed = 1 : <span class="tooltip-text" title="Democratic Peoples Liberation Front" style="color: #CE2029;">**DPLF**</span> : [+ dplf_relation : relationships +]  ?]
+
+[? if eprlf_formed = 1 : <span class="tooltip-text" title="Eelam Peoples Revolutionary Liberation Front" style="color: #FF4500;">**EPRLF**</span> : [+ eprlf_relation : relationships +]  ?]
+
+[? if telo_formed = 1 : <span class="tooltip-text" title="Tamil Eelam Liberation Organisation" style="color: #893F45;">**TELO**</span> : [+ telo_relation : relationships +]  ?]
+
+[? if endlf_formed = 1 : <span class="tooltip-text" title="Eelam National Democratic Liberation Front" style="color: #FF5E5E;">**ENDLF**</span> : [+ endlf_relation : relationships +]  ?]
+
+<span class="tooltip-text" title="Janatha Vimukthi Peramuna" style="color: #FF2226;">**JVP**</span> : [+ jvp_relation : relationships +] 
+
+[? if npp_formed = 1 : <span class="tooltip-text" title="National Peoples Power" style="color: #9F005D;">**NPP**</span> : [+ npp_relation : relationships +]  ?]
+
+<span class="tooltip-text" title="Communist Party Of Sri Lanka" style="color: #65000B;">**CPSL**</span> : [+ cpsl_relation : relationships +] 
+
+<span class="tooltip-text" title="Lanka Sama Samaja Party" style="color: #A91101;">**LSSP**</span> : [+ lssp_relation : relationships +] 
+
+<span class="tooltip-text" title="Nava Sama Samaja Party" style="color: #FF8080;">**NSSP**</span> : [+ nssp_relation : relationships +] 
+
+[? if mep_formed = 1 : <span class="tooltip-text" title="Mahajana Eksath Peramuna" style="color: #f98538;">**MEP**</span> : [+ mep_relation : relationships +]  ?]
+
+[? if dunf_formed = 1 : <span class="tooltip-text" title="Democratic United National Front" style="color: #128812;">**DUNF**</span> : [+ dunf_relation : relationships +]  ?]
+
+[? if ulpp_formed = 1 : <span class="tooltip-text" title="United Lanka Peoples Party" style="color: #DAEA67;">**ULPP**</span> : [+ ulpp_relation : relationships +]  ?]
+
+<span class="tooltip-text" title="Ceylon Workers Congress" style="color: #E52B50;">**CWC**</span> : [+ cwc_relation : relationships +] 
+
+[? if ucpf_formed = 1 : <span class="tooltip-text" title="Up Country Peoples Front" style="color: #9C1600;">**UCPF**</span> : [+ ucpf_relation : relationships +]  ?]
+
+[? if slmc_formed = 1 : <span class="tooltip-text" title="Sri Lanka Muslim Congress" style="color: #2DCF3E;">**SLMC**</span> : [+ slmc_relation : relationships +]  ?]
+
+= Active Coalitions
+
+[? if coalition_count >= 1 : {!<div class="ccard" style="border:3px solid !}[+ c0_color +]{!"><div class="chdr"><b class="cname">!}[+ c0_name +]{!</span></div><div class="clead">Led by <b>!}[+ c0_lead +]{!</b></div><div class="cmem">!}[+ c0_members +]{!</div></div>!} ?]
+
+[? if coalition_count >= 2 : {!<div class="ccard" style="border:3px solid !}[+ c1_color +]{!"><div class="chdr"><b class="cname">!}[+ c1_name +]{!</span></div><div class="clead">Led by <b>!}[+ c1_lead +]{!</b></div><div class="cmem">!}[+ c1_members +]{!</div></div>!} ?]
+
+[? if coalition_count >= 3 : {!<div class="ccard" style="border:3px solid !}[+ c2_color +]{!"><div class="chdr"><b class="cname">!}[+ c2_name +]{!</span></div><div class="clead">Led by <b>!}[+ c2_lead +]{!</b></div><div class="cmem">!}[+ c2_members +]{!</div></div>!} ?]
+
+[? if coalition_count >= 4 : {!<div class="ccard" style="border:3px solid !}[+ c3_color +]{!"><div class="chdr"><b class="cname">!}[+ c3_name +]{!</span></div><div class="clead">Led by <b>!}[+ c3_lead +]{!</b></div><div class="cmem">!}[+ c3_members +]{!</div></div>!} ?]
+
+[? if coalition_count >= 5 : {!<div class="ccard" style="border:3px solid !}[+ c4_color +]{!"><div class="chdr"><b class="cname">!}[+ c4_name +]{!</span></div><div class="clead">Led by <b>!}[+ c4_lead +]{!</b></div><div class="cmem">!}[+ c4_members +]{!</div></div>!} ?]
+
+[? if coalition_count >= 6 : {!<div class="ccard" style="border:3px solid !}[+ c5_color +]{!"><div class="chdr"><b class="cname">!}[+ c5_name +]{!</span></div><div class="clead">Led by <b>!}[+ c5_lead +]{!</b></div><div class="cmem">!}[+ c5_members +]{!</div></div>!} ?]
+
+[? if coalition_count >= 7 : {!<div class="ccard" style="border:3px solid !}[+ c6_color +]{!"><div class="chdr"><b class="cname">!}[+ c6_name +]{!</span></div><div class="clead">Led by <b>!}[+ c6_lead +]{!</b></div><div class="cmem">!}[+ c6_members +]{!</div></div>!} ?]
+
+[? if coalition_count >= 8 : {!<div class="ccard" style="border:3px solid !}[+ c7_color +]{!"><div class="chdr"><b class="cname">!}[+ c7_name +]{!</span></div><div class="clead">Led by <b>!}[+ c7_lead +]{!</b></div><div class="cmem">!}[+ c7_members +]{!</div></div>!} ?]
+
+[? if coalition_count = 0 : {!<div class="cno">No active coalitions</div>!} ?]
+
+= Party Ideologies
+
+[? if slpp_formed = 1 : <span class="tooltip-text" title="Sri Lanka Podujana Peramuna" style="color: #E52B50;">**SLPP**</span> : [+ slpp_ideology : ideology +]  ?]
+
+[? if slmp_formed = 1 : <span class="tooltip-text" title="Sri Lanka Mahajana Pakshaya" style="color: #663399;">**SLMP**</span> : [+ slmp_ideology : ideology +]  ?]
+
+<span class="tooltip-text" title="Janatha Vimukthi Peramuna" style="color: #FF2226;">**JVP**</span> : [+ jvp_ideology : ideology +] 
+
+[? if npp_formed = 1 : <span class="tooltip-text" title="National Peoples Power" style="color: #9F005D;">**NPP**</span> : [+ npp_ideology : ideology +]  ?]
+
+<span class="tooltip-text" title="United National Party" style="color: #006400;">**UNP**</span> : [+ unp_ideology : ideology +] 
+
+<span class="tooltip-text" title="Tamil United Liberation Front" style="color: #F7D917;">**TULF**</span> : [+ tulf_ideology : ideology +] 
+
+[? if pflt_formed = 1 : <span class="tooltip-text" title="Peoples Front of Liberation Tigers" style="color: #DC143C;">**PFLT**</span> : [+ pflt_ideology : ideology +]  ?]
+
+<span class="tooltip-text" title="All Ceylon Tamil Congress" style="color: #FDCC01;">**ACTC**</span> : [+ actc_ideology : ideology +] 
+
+[? if eros_formed = 1 : <span class="tooltip-text" title="Eelam Revolutionary Organisation Of Students" style="color: #FF2400;">**EROS**</span> : [+ eros_ideology : ideology +]  ?]
+
+[? if dplf_formed = 1 : <span class="tooltip-text" title="Democratic Peoples Liberation Front" style="color: #CE2029;">**DPLF**</span> : [+ dplf_ideology : ideology +]  ?]
+
+[? if eprlf_formed = 1 : <span class="tooltip-text" title="Eelam Peoples Revolutionary Liberation Front" style="color: #FF4500;">**EPRLF**</span> : [+ eprlf_ideology : ideology +]  ?]
+
+[? if telo_formed = 1 : <span class="tooltip-text" title="Tamil Eelam Liberation Organisation" style="color: #893F45;">**TELO**</span> : [+ telo_ideology : ideology +]  ?]
+
+[? if endlf_formed = 1 : <span class="tooltip-text" title="Eelam National Democratic Liberation Front" style="color: #FF5E5E;">**ENDLF**</span> : [+ endlf_ideology : ideology +]  ?]
+
+<span class="tooltip-text" title="Communist Party Of Sri Lanka" style="color: #65000B;">**CPSL**</span> : [+ cpsl_ideology : ideology +] 
+
+<span class="tooltip-text" title="Lanka Sama Samaja Party" style="color: #A91101;">**LSSP**</span> : [+ lssp_ideology : ideology +] 
+
+<span class="tooltip-text" title="Nava Sama Samaja Party" style="color: #FF8080;">**NSSP**</span> : [+ nssp_ideology : ideology +] 
+
+[? if mep_formed = 1 : <span class="tooltip-text" title="Mahajana Eksath Peramuna" style="color: #f98538;">**MEP**</span> : [+ mep_ideology : ideology +]  ?]
+
+[? if dunf_formed = 1 : <span class="tooltip-text" title="Democratic United National Front" style="color: #128812;">**DUNF**</span> : [+ dunf_ideology : ideology +]  ?]
+
+[? if ulpp_formed = 1 : <span class="tooltip-text" title="United Lanka Peoples Party" style="color: #DAEA67;">**ULPP**</span> : [+ ulpp_ideology : ideology +]  ?]
+
+<span class="tooltip-text" title="Ceylon Workers Congress" style="color: #E52B50;">**CWC**</span> : [+ cwc_ideology : ideology +] 
+
+[? if ucpf_formed = 1 : <span class="tooltip-text" title="Up Country Peoples Front" style="color: #9C1600;">**UCPF**</span> : [+ ucpf_ideology : ideology +]  ?]
+
+[? if slmc_formed = 1 : <span class="tooltip-text" title="Sri Lanka Muslim Congress" style="color: #2DCF3E;">**SLMC**</span> : [+ slmc_ideology : ideology +]  ?]
+
+@paramilitaries
+on-arrival: {!
+if (Q.slfpt_strength) {
+    Q.slfpt_strength_2 = Q.slfpt_strength.toFixed(1);
+}
+if (Q.jss_strength) {
+    Q.jss_strength_2 = Q.jss_strength.toFixed(1);
+}
+if (Q.ltte_strength) {
+    Q.ltte_strength_2 = Q.ltte_strength.toFixed(1);
+}
+if (Q.telo_strength) {
+    Q.telo_strength_2 = Q.telo_strength.toFixed(1);
+}
+if (Q.eros_strength) {
+    Q.eros_strength_2 = Q.eros_strength.toFixed(1);
+}
+if (Q.plote_strength) {
+    Q.plote_strength_2 = Q.plote_strength.toFixed(1);
+}
+if (Q.eprlf_strength) {
+    Q.eprlf_strength_2 = Q.eprlf_strength.toFixed(1);
+}
+if (Q.prra_strength) {
+    Q.prra_strength_2 = Q.prra_strength.toFixed(1);
+}
+if (Q.djv_strength) {
+    Q.djv_strength_2 = Q.djv_strength.toFixed(1);
+}
+if (Q.eagles_strength) {
+    Q.eagles_strength_2 = Q.eagles_strength.toFixed(1);
+}
+if (Q.epdp_strength) {
+    Q.epdp_strength_2 = Q.epdp_strength.toFixed(1);
+}
+if (Q.tna_strength) {
+    Q.tna_strength_2 = Q.tna_strength.toFixed(1);
+}
+if (Q.endlf_strength) {
+    Q.endlf_strength_2 = Q.endlf_strength.toFixed(1);
+}
+if (Q.blackcats_strength) {
+    Q.blackcats_strength_2 = Q.blackcats_strength.toFixed(1);
+}
+if (Q.ipkf_morale) {
+    Q.ipkf_morale_2 = Q.ipkf_morale.toFixed(1);
+}
+
+const getTip = id => {
+    let t = tooltipList.find(x => x.searchString === id);
+    let tipContent = t ? window.getDynamicTooltipContent(id, t) : '';
+    
+    return tipContent
+        .replace(/Tamil Eelam/g, 'Tamil<span></span> Eelam')
+        .replace(/Sri Lanka Army/g, 'Sri Lanka A&zwnj;rmy')
+        .replace(/Sri Lanka Navy/g, 'Sri Lanka N&zwnj;avy')
+        .replace(/Sri Lanka AirForce/g, 'Sri Lanka A&zwnj;irForce')
+        .replace(/Sri Lanka Police/g, 'Sri Lanka P&zwnj;olice')
+        .replace(/Special Task Force/g, 'Special T&zwnj;ask Force')
+        .replace(/Black Cats/g, 'B&zwnj;lack Cats')
+        .replace(/STF/g, 'S&zwnj;TF')
+        .replace(/NIB/g, 'N&zwnj;IB')
+        .replace(/Home Guard/g, 'Home G&zwnj;uard')
+        .replace(/Civil Security/g, 'Civil S&zwnj;ecurity')
+        .replace(/IPKF/g, 'I&zwnj;PKF')
+        .replace(/EPDP/g, 'E&zwnj;PDP')
+        .replace(/TNA/g, 'T&zwnj;NA')
+        .replace(/JVP Thugs/g, 'J&zwnj;VP Thugs')
+        .replace(/ENDLF/g, 'E&zwnj;NDLF');
+        
+};
+
+Q.tip_ltte = getTip('LTTE');
+Q.tip_plote = getTip('PLOTE');
+Q.tip_eprlf = getTip('EPRLF');
+Q.tip_eros = getTip('EROS');
+Q.tip_telo = getTip('TELO');
+Q.tip_army = getTip('Sri Lanka Army');
+Q.tip_navy = getTip('Sri Lanka Navy');
+Q.tip_air = getTip('Sri Lanka AirForce');
+Q.tip_police = getTip('Sri Lanka Police');
+Q.tip_stf = getTip('STF');
+Q.tip_nib = getTip('NIB');
+Q.tip_hg = getTip('Home Guard');
+Q.tip_cs = getTip('Civil Security');
+Q.tip_ipkf = getTip('IPKF');
+Q.tip_epdp = getTip('EPDP');
+Q.tip_tna = getTip('TNA');
+Q.tip_endlf = getTip('ENDLF');
+Q.tip_slfpt = getTip('SLFP');
+Q.tip_prra = getTip('PRRA');
+Q.tip_jss = getTip('JSS');
+Q.tip_jvpt = getTip('JVP');
+Q.tip_djv = getTip('DJV');
+Q.tip_blackcats = getTip('Black Cats');
+Q.tip_eagles = getTip('Eagles Of The Central Hills');
+!}
+
+= Political Paramilitaries
+
+{!<img src="img/paramilitaries.jpg" style="width: 85%; height: auto; border: 4px solid rgb(43, 43, 43); padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3); display: block; margin: 0 auto;">!}
+
+<div style="position: relative; width: 85%; display: block; margin: 25px auto 40px auto;">
+<img src="img/streets.svg" style="width: 100%; display: block; height: auto;" />
+
+<div style="position: absolute; top: 4%; left: 0; width: 100%; text-align: center; font-family: 'Stick No Bills', sans-serif; font-size: 1.1em; font-weight: bold; z-index: 10;">
+  <span class="mytooltip no-highlight" style="cursor: help;">
+    <img src="img/para_fighting_logo.svg" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 6px;" />[+ parafighting : control +]
+    <span class="mytooltiptext"><img src="img/para_fighting_logo.svg"/>Intensity of street violence and paramilitary clashes<br>[+ parafighting : control +]</span>
+  </span>
+</div>
+
+[? if prra_formed = 1 :
+<div class="mytooltip no-highlight" style="position: absolute; left: 4%; top: 46%; width: 25%; cursor: help; text-align: center;">
+<div style="font-weight: bold; font-size: 1.1em; margin-bottom: 4px;">PRRA</div>
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2;">
+<img src="img/para_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ prra_strength_2 : group_strength +]<br>
+<img src="img/para_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ prra_militancy : militancy +]
+</div>
+<span class="mytooltiptext">[+ tip_prra +]</span>
+</div>
+?]
+
+<div class="mytooltip no-highlight" style="position: absolute; left: 30%; top: 20%; width: 25%; cursor: help; text-align: center;">
+<div style="color: #006400; font-weight: bold; font-size: 1.1em; margin-bottom: 4px;">JSS</div>
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2;">
+<img src="img/para_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ jss_strength_2 : group_strength +]<br>
+<img src="img/para_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ jss_militancy : militancy +]
+</div>
+<span class="mytooltiptext">[+ tip_jss +]</span>
+</div>
+
+<div class="mytooltip no-highlight" style="position: absolute; left: 65%; top: 10%; width: 25%; cursor: help; text-align: center;">
+<div style="color: #FF2226; font-weight: bold; font-size: 1.1em; margin-bottom: 4px;">JVP Thugs</div>
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2;">
+<img src="img/para_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ jvpt_strength_2 : group_strength +]<br>
+<img src="img/para_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ jvpt_militancy : militancy +]
+</div>
+<span class="mytooltiptext">[+ tip_jvpt +]</span>
+</div>
+
+[? if djv_formed = 1 :
+<div class="mytooltip no-highlight" style="position: absolute; left: 59%; top: 40%; width: 25%; cursor: help; text-align: center;">
+<div style="font-weight: bold; font-size: 1.1em; margin-bottom: 4px;">DJV</div>
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2;">
+<img src="img/para_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ djv_strength_2 : group_strength +]<br>
+<img src="img/para_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ djv_militancy : militancy +]
+</div>
+<span class="mytooltiptext">[+ tip_djv +]</span>
+</div>
+?]
+
+[? if blackcats_formed = 1 :
+<div class="mytooltip no-highlight" style="position: absolute; left: 63%; top: 76%; width: 25%; cursor: help; text-align: center;">
+<div style="font-weight: bold; font-size: 1.1em; margin-bottom: 4px;">Black Cats</div>
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2;">
+<img src="img/para_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ blackcats_strength_2 : group_strength +]<br>
+<img src="img/para_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ blackcats_militancy : militancy +]
+</div>
+<span class="mytooltiptext">[+ tip_blackcats +]</span>
+</div>
+?]
+
+[? if eagles_formed = 1 :
+<div class="mytooltip no-highlight" style="position: absolute; left: 38%; top: 52%; width: 25%; cursor: help; text-align: center;">
+<div style="font-weight: bold; font-size: 1.1em; margin-bottom: 4px;">Eagles Of The Central Hills</div>
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2;">
+<img src="img/para_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ eagles_strength_2 : group_strength +]<br>
+<img src="img/para_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ eagles_militancy : militancy +]
+</div>
+<span class="mytooltiptext">[+ tip_eagles +]</span>
+</div>
+?]
+</div>
+
+= Tamil Militant Groups
+
+{!<img src="img/tamil_militants.jpg" style="width: 85%; height: auto; border: 4px solid rgb(43, 43, 43); padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3); display: block; margin: 0 auto;">!}
+
+<div style="position: relative; width: 100%; display: block; margin-top: 45px; padding-bottom: 0;">
+<img src="img/militant_eelam_2.svg" style="width: 70%; display: block; margin: 0 auto; height: auto;" />
+
+<div class="mytooltip no-highlight" style="position: absolute; left: 40%; top: -13%; width: 20%; cursor: help;">
+<img src="img/logos/LTTE_logo.png" style="width: 100%; height: auto; object-fit: contain;" />
+<div style="position: absolute; left: 105%; top: 50%; transform: translateY(-50%); width: max-content; font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2; text-align: left;"><img src="img/militant_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ ltte_strength : group_strength +]<br><img src="img/militant_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ ltte_militancy : militancy +]</div>
+<span class="mytooltiptext">[+ tip_ltte +]</span>
+</div>
+
+<div class="mytooltip no-highlight" style="position: absolute; left: 78%; top: 10%; width: 20%; cursor: help;">
+<img src="img/logos/PLOTE_logo.png" style="width: 100%; height: auto; object-fit: contain;" />
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2; text-align: center; margin-top: 5px;"><img src="img/militant_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ plote_strength : group_strength +]<br><img src="img/militant_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ plote_militancy : militancy +]</div>
+<span class="mytooltiptext">[+ tip_plote +]</span>
+</div>
+
+<div class="mytooltip no-highlight" style="position: absolute; left: 78%; top: 50%; width: 20%; cursor: help;">
+<img src="img/logos/EPRLF_logo.png" style="width: 100%; height: auto; object-fit: contain;" />
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2; text-align: center; margin-top: 5px;"><img src="img/militant_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ eprlf_strength : group_strength +]<br><img src="img/militant_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ eprlf_militancy : militancy +]</div>
+<span class="mytooltiptext">[+ tip_eprlf +]</span>
+</div>
+
+<div class="mytooltip no-highlight" style="position: absolute; left: 2%; top: 50%; width: 20%; cursor: help;">
+<img src="img/logos/EROS_logo.png" style="width: 100%; height: auto; object-fit: contain;" />
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2; text-align: center; margin-top: 5px;"><img src="img/militant_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ eros_strength : group_strength +]<br><img src="img/militant_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ eros_militancy : militancy +]</div>
+<span class="mytooltiptext">[+ tip_eros +]</span>
+</div>
+
+<div class="mytooltip no-highlight" style="position: absolute; left: 2%; top: 10%; width: 20%; cursor: help;">
+<img src="img/logos/TELO_logo.png" style="width: 100%; height: auto; object-fit: contain;" />
+<div style="font-family: 'Stick No Bills', sans-serif; font-size: 0.85em; line-height: 1.2; text-align: center; margin-top: 5px;"><img src="img/militant_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ telo_strength : group_strength +]<br><img src="img/militant_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ telo_militancy : militancy +]</div>
+<span class="mytooltiptext">[+ tip_telo +]</span>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%; margin-top: 15px; position: relative; z-index: 5; padding: 0 10px; box-sizing: border-box;">
+<div style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+<img src="img/situation_logo.svg" style="width: 35px; height: 35px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="font-size: 0.9em; line-height: 1.2;">Current Situation:<br>[+ tamil_war : war +]</div>
+</div>
+<div style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+<img src="img/radicalisation_logo.svg" style="width: 35px; height: 35px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="font-size: 0.9em; line-height: 1.2;">Radicalisation:<br>[+ tamil_radicalisation : radicalism +]</div>
+</div>
+<div style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+<img src="img/militant_morale_logo.svg" style="width: 35px; height: 35px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="font-size: 0.9em; line-height: 1.2;">Militant Morale:<br>[+ tamil_morale : loyalty +]</div>
+</div>
+<div style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+<img src="img/ne_control_logo.svg" style="width: 35px; height: 35px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="font-size: 0.9em; line-height: 1.2;">North-East Control:<br>[+ militant_control : radicalism +]</div>
+</div>
+<div style="display: flex; align-items: center; width: 100%; justify-content: center; margin-top: 5px;">
+<img src="img/jaffna_control_logo.svg" style="width: 35px; height: 35px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="font-size: 0.95em; line-height: 1.2;"><span class="wide_tooltip-wrap">Jaffna<span class="wide_tooltip-tip"><img src="img/Nallur_Kandaswamy.jpg">Second largest city in Sri Lanka and the largest in the Tamil north-east. Its large population and importance historically and culturally have made it a hub of militant activity.</span></span> Control:<br>[+ jaffna_control +]</div>
+</div>
+</div>
+
+= Military & State Paramilitaries
+
+{!<img src="img/military.jpg" style="width: 94%; height: auto; border: 4px solid rgb(43, 43, 43); padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3); display: block; margin: 0 auto 1.5em auto;">!}
+
+<div style="text-align: center; margin-bottom: 15px;">
+<div style="font-size: 1.8em; font-weight: bold;">Sri Lanka Armed Forces</div>
+<div style="font-size: 1.1em; margin-top: 5px;"><img src="img/war_exhaustion_logo.svg" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;" />War Exhaustion: [+ war_exhaustion : coalition_dissent +] &nbsp;|&nbsp; <img src="img/army_morale_logo.svg" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;" />Morale: [+ slaf_morale : loyalty +]</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%;">
+<div class="mytooltip no-highlight" style="width: 32%; box-sizing: border-box; padding: 6px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/SLAF_AR_Logo.png" style="width: 35px; height: 35px; object-fit: contain; margin-right: 6px; flex-shrink: 0;" />
+<div style="line-height: 1.2; font-size: 0.85em;"><img src="img/army_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ slaf_ar_strenght +]k<br><img src="img/readiness_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ slaf_ar_readiness : militancy +]</div>
+<span class="mytooltiptext">[+ tip_army +]</span>
+</div>
+<div class="mytooltip no-highlight" style="width: 32%; box-sizing: border-box; padding: 6px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/SLAF_AF_Logo.png" style="width: 35px; height: 35px; object-fit: contain; margin-right: 6px; flex-shrink: 0;" />
+<div style="line-height: 1.2; font-size: 0.85em;"><img src="img/army_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ slaf_af_strenght +]k<br><img src="img/readiness_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ slaf_af_readiness : militancy +]</div>
+<span class="mytooltiptext">[+ tip_air +]</span>
+</div>
+<div class="mytooltip no-highlight" style="width: 32%; box-sizing: border-box; padding: 6px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/SLAF_NA_Logo.png" style="width: 35px; height: 35px; object-fit: contain; margin-right: 6px; flex-shrink: 0;" />
+<div style="line-height: 1.2; font-size: 0.85em;"><img src="img/army_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ slaf_na_strenght +]k<br><img src="img/readiness_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ slaf_na_readiness : militancy +]</div>
+<span class="mytooltiptext">[+ tip_navy +]</span>
+</div>
+</div>
+<img src="img/army_lanka.svg" style="width: 55%; max-width: 300px; display: block; margin: 10px auto 20px; height: auto;" />
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%;">
+<div class="mytooltip no-highlight" style="width: 48%; box-sizing: border-box; padding: 8px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/Sri_Lanka_Police_Logo.png" style="width: 45px; height: 45px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="line-height: 1.3; font-size: 0.9em;"><img src="img/army_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ slp_strength +]k<br><img src="img/army_morale_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ slp_morale : loyalty +]<br><img src="img/readiness_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ slp_readiness : militancy +]</div>
+<span class="mytooltiptext">[+ tip_police +]</span>
+</div>
+[? if stf_formed = 1 :
+<div class="mytooltip no-highlight" style="width: 48%; box-sizing: border-box; padding: 8px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/STF_logo.png" style="width: 45px; height: 45px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="line-height: 1.3; font-size: 0.9em;"><img src="img/army_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ stf_strength +]k<br><img src="img/army_morale_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ stf_morale : loyalty +]<br><img src="img/readiness_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ stf_readiness : militancy +]</div>
+<span class="mytooltiptext">[+ tip_stf +]</span>
+</div>
+?]
+[? if nib_formed = 1 :
+<div class="mytooltip no-highlight" style="width: 48%; box-sizing: border-box; padding: 8px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/NIB_Logo.png" style="width: 45px; height: 45px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="line-height: 1.3; font-size: 0.9em;"><img src="img/army_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ nib_strength +]k<br><img src="img/army_morale_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ nib_morale : loyalty +]<br><img src="img/readiness_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ nib_readiness : militancy +]</div>
+<span class="mytooltiptext">[+ tip_nib +]</span>
+</div>
+?]
+[? if civilsec_formed = 0 :
+<div class="mytooltip no-highlight" style="width: 48%; box-sizing: border-box; padding: 8px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/Home_Guard_Logo.png" style="width: 45px; height: 45px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="line-height: 1.3; font-size: 0.9em;"><img src="img/army_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ homeg_civilsec_strength +]k<br><img src="img/army_morale_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ homeg_civilsec_morale : loyalty +]<br><img src="img/readiness_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ homeg_civilsec_readiness : militancy +]</div>
+<span class="mytooltiptext">[+ tip_hg +]</span>
+</div>
+?]
+[? if civilsec_formed = 1 :
+<div class="mytooltip no-highlight" style="width: 48%; box-sizing: border-box; padding: 8px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/Civil_Security_Logo.png" style="width: 45px; height: 45px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="line-height: 1.3; font-size: 0.9em;"><img src="img/army_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ homeg_civilsec_strength +]k<br><img src="img/army_morale_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ homeg_civilsec_morale : loyalty +]<br><img src="img/readiness_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ homeg_civilsec_readiness : militancy +]</div>
+<span class="mytooltiptext">[+ tip_cs +]</span>
+</div>
+?]
+</div>
+[? if ipkf_formed = 1 :
+<div class="mytooltip no-highlight" style="width: 48%; box-sizing: border-box; padding: 8px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/IPKF_Logo.png" style="width: 45px; height: 45px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="line-height: 1.3; font-size: 0.9em;"><img src="img/army_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ ipkf_size +]k<br><img src="img/army_morale_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ ipkf_morale_2 : loyalty +]</div>
+<span class="mytooltiptext">[+ tip_ipkf +]</span>
+</div>
+?]
+[? if epdp_formed = 1 :
+<div class="mytooltip no-highlight" style="width: 48%; box-sizing: border-box; padding: 8px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/EPDP_Logo.png" style="width: 45px; height: 45px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="line-height: 1.3; font-size: 0.9em;"><img src="img/para_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ epdp_strength_2 : group_strength +]<br><img src="img/para_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ epdp_militancy : militancy +]</div>
+<span class="mytooltiptext">[+ tip_epdp +]</span>
+</div>
+?]
+[? if tna_formed = 1 :
+<div class="mytooltip no-highlight" style="width: 48%; box-sizing: border-box; padding: 8px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/TNA_Logo.png" style="width: 45px; height: 45px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="line-height: 1.3; font-size: 0.9em;"><img src="img/para_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ tna_strength_2 : group_strength +]<br><img src="img/para_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ tna_militancy : militancy +]</div>
+<span class="mytooltiptext">[+ tip_tna +]</span>
+</div>
+?]
+[? if endlf_formed = 1 :
+<div class="mytooltip no-highlight" style="width: 48%; box-sizing: border-box; padding: 8px; margin-bottom: 10px; display: flex; align-items: center; cursor: help;">
+<img src="img/logos/ENDLF_Logo.png" style="width: 45px; height: 45px; object-fit: contain; margin-right: 10px; flex-shrink: 0;" />
+<div style="line-height: 1.3; font-size: 0.9em;"><img src="img/para_strenght_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />Str: [+ endlf_strength_2 : group_strength +]<br><img src="img/para_militancy_logo.svg" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;" />[+ endlf_militancy : militancy +]</div>
+<span class="mytooltiptext">[+ tip_endlf +]</span>
+</div>
+?]
+</div>
+
+@polls
+on-arrival: {!
+Q.sinhala_nationalism_disp = Math.round(Q.sinhala_nationalism);
+Q.tamil_nationalism_disp = Math.round(Q.tamil_nationalism);
+Q.gov_support_disp = Math.round(Q.gov_support);
+
+!}
+
+= Polls
+
+= Ethnicity: 
+
+<div id="ethnicity_table" onmouseover="scrollhor('ethnicity_table');" style="overflow-y: scroll;">
+
+<table>
+               <tr>
+                  <th></th>     
+               
+                  <td>SLFP</td>
+
+                  <td>JVP</td>
+
+                  <td>CPSL</td>
+
+                  <td>LSSP</td>
+
+                  <td>NSSP</td>
+
+                  <td>TULF</td>
+
+                  <td>CWC</td>
+
+                  <td>UNP</td>
+
+                  <td>ACTC</td>
+
+                  [? if slpp_formed: <td>SLPP</td> ?]
+
+                  [? if slmp_formed: <td>SLMP</td> ?]
+                  
+                  [? if slmc_formed: <td>SLMC</td> ?]
+
+                  [? if npp_formed: <td>NPP</td> ?]
+
+                  [? if nep_formed: <td>MEP</td> ?]
+
+                  [? if dunf_formed: <td>DUNF</td> ?]
+
+                  [? if ulpp_formed: <td>ULPP</td> ?]
+
+                  [? if eros_formed: <td>EROS</td> ?]
+
+                  [? if eprlf_formed: <td>EPRLF</td> ?]
+
+                  [? if telo_formed: <td>ENDLF</td> ?]
+
+                  [? if endlf_formed: <td>ENDLF</td> ?]
+
+                  [? if dplf_formed: <td>DPLF</td> ?]
+                  
+                  [? if pflt_formed: <td>PFLT</td> ?]
+
+                  [? if ucpf_formed: <td>UCPF</td> ?]
+
+                  <td>Nonvoters</td>
+
+               </tr>
+               <tr>
+                  <th>Sinhalese</th>
+
+                  <td>[+ sinhala_slfp +]%</td>
+
+                  <td>[+ sinhala_jvp +]%</td>
+                  <td>[+ sinhala_cpsl +]%</td>
+                  <td>[+ sinhala_lssp +]%</td>
+
+                  <td>[+ sinhala_nssp +]%</td>
+                  <td>[+ sinhala_tulf +]%</td>
+                  <td>[+ sinhala_cwc +]%</td>
+
+                  <td>[+ sinhala_unp +]%</td>
+                  <td>[+ sinhala_actc +]%</td>
+
+                  [? if slpp_formed: <td>[+ sinhala_slpp +]%</td> ?]
+
+                  [? if slmp_formed: <td>[+ sinhala_slmp +]%</td> ?]
+                  
+                  [? if slmc_formed: <td>[+ sinhala_slmc +]%</td> ?]
+
+                  [? if npp_formed: <td>[+ sinhala_npp +]%</td> ?]
+
+                  [? if mep_formed: <td>[+ sinhala_mep +]%</td> ?]
+
+                  [? if dunf_formed: <td>[+ sinhala_dunf +]%</td> ?]
+
+                  [? if ulpp_formed: <td>[+ sinhala_ulpp +]%</td> ?]
+
+                  [? if eros_formed: <td>[+ sinhala_eros +]%</td> ?]
+
+                  [? if eprlf_formed: <td>[+ sinhala_eprlf +]%</td> ?]
+
+                  [? if telo_formed: <td>[+ sinhala_telo +]%</td> ?]
+
+                  [? if endlf_formed: <td>[+ sinhala_endlf +]%</td> ?]
+
+                  [? if dplf_formed: <td>[+ sinhala_dplf +]%</td> ?]
+                  
+                  [? if pflt_formed: <td>[+ sinhala_pflt +]%</td> ?]
+
+                  [? if ucpf_formed: <td>[+ sinhala_ucpf +]%</td> ?]
+
+                  <td>[+ sinhala_nonvoter +]%</td>
+
+               </tr>
+               <tr>
+                  <th>Sri Lankan Tamil</th>
+
+                  <td>[+ sltamil_slfp +]%</td>
+
+                  <td>[+ sltamil_jvp +]%</td>
+                  <td>[+ sltamil_cpsl +]%</td>
+                  <td>[+ sltamil_lssp +]%</td>
+
+                  <td>[+ sltamil_nssp +]%</td>
+                  <td>[+ sltamil_tulf +]%</td>
+                  <td>[+ sltamil_cwc +]%</td>
+
+                  <td>[+ sltamil_unp +]%</td>
+                  <td>[+ sltamil_actc +]%</td>
+
+                  [? if slpp_formed: <td>[+ sltamil_slpp +]%</td> ?]
+
+                  [? if slmp_formed: <td>[+ sltamil_slmp +]%</td> ?]
+                  
+                  [? if slmc_formed: <td>[+ sltamil_slmc +]%</td> ?]
+
+                  [? if npp_formed: <td>[+ sltamil_npp +]%</td> ?]
+
+                  [? if mep_formed: <td>[+ sltamil_mep +]%</td> ?]
+
+                  [? if dunf_formed: <td>[+ sltamil_dunf +]%</td> ?]
+
+                  [? if ulpp_formed: <td>[+ sltamil_ulpp +]%</td> ?]
+
+                  [? if eros_formed: <td>[+ sltamil_eros +]%</td> ?]
+
+                  [? if eprlf_formed: <td>[+ sltami_eprlf +]%</td> ?]
+
+                  [? if telo_formed: <td>[+ sltamil_telo +]%</td> ?]
+
+                  [? if endlf_formed: <td>[+ sltamil_endlf +]%</td> ?]
+
+                  [? if dplf_formed: <td>[+ sltamil_dplf +]%</td> ?]
+                  
+                  [? if pflt_formed: <td>[+ sltamil_pflt +]%</td> ?]
+
+                  [? if ucpf_formed: <td>[+ sltamil_ucpf +]%</td> ?]
+
+                  <td>[+ sltamil_nonvoter +]%</td>
+               </tr>
+               <tr>
+                  <th>Muslims</th>
+
+                  <td>[+ muslim_slfp +]%</td>
+
+                  <td>[+ muslim_jvp +]%</td>
+                  <td>[+ muslim_cpsl +]%</td>
+                  <td>[+ muslim_lssp +]%</td>
+
+                  <td>[+ muslim_nssp +]%</td>
+                  <td>[+ muslim_tulf +]%</td>
+                  <td>[+ muslim_cwc +]%</td>
+
+                  <td>[+ muslim_unp +]%</td>
+                  <td>[+ muslim_actc +]%</td>
+
+                  [? if slpp_formed: <td>[+ muslim_slpp +]%</td> ?]
+
+                  [? if slmp_formed: <td>[+ muslim_slmp +]%</td> ?]
+                  
+                  [? if slmc_formed: <td>[+ muslim_slmc +]%</td> ?]
+
+                  [? if npp_formed: <td>[+ muslim_npp +]%</td> ?]
+
+                  [? if mep_formed: <td>[+ muslim_mep +]%</td> ?]
+
+                  [? if dunf_formed: <td>[+ muslim_dunf +]%</td> ?]
+
+                  [? if ulpp_formed: <td>[+ muslim_ulpp +]%</td> ?]
+
+                  [? if eros_formed: <td>[+ muslim_eros +]%</td> ?]
+
+                  [? if eprlf_formed: <td>[+ muslim_eprlf +]%</td> ?]
+
+                  [? if telo_formed: <td>[+ muslim_telo +]%</td> ?]
+
+                  [? if endlf_formed: <td>[+ muslim_endlf +]%</td> ?]
+
+                  [? if dplf_formed: <td>[+ muslim_dplf +]%</td> ?]
+                  
+                  [? if pflt_formed: <td>[+ muslim_pflt +]%</td> ?]
+
+                  [? if ucpf_formed: <td>[+ muslim_ucpf +]%</td> ?]
+
+                  <td>[+ muslim_nonvoter +]%</td>
+               </tr>
+               <tr>
+                  <th>Indian Tamil</th>
+
+                  <td>[+ itamil_slfp +]%</td>
+
+                  <td>[+ itamiljvp +]%</td>
+                  <td>[+ itamil_cpsl +]%</td>
+                  <td>[+ itamil_lssp +]%</td>
+
+                  <td>[+ itamil_nssp +]%</td>
+                  <td>[+ itamil_tulf +]%</td>
+                  <td>[+ itamil_cwc +]%</td>
+
+                  <td>[+ itamil_unp +]%</td>
+                  <td>[+ itamil_actc +]%</td>
+
+                  [? if slpp_formed: <td>[+ itamil_slpp +]%</td> ?]
+
+                  [? if slmp_formed: <td>[+ itamil_slmp +]%</td> ?]
+                  
+                  [? if slmc_formed: <td>[+ itamil_slmc +]%</td> ?]
+
+                  [? if npp_formed: <td>[+ itamil_npp +]%</td> ?]
+
+                  [? if mep_formed: <td>[+ itamil_mep +]%</td> ?]
+
+                  [? if dunf_formed: <td>[+ itamil_dunf +]%</td> ?]
+
+                  [? if ulpp_formed: <td>[+ itamil_ulpp +]%</td> ?]
+
+                  [? if eros_formed: <td>[+ itamil_eros +]%</td> ?]
+
+                  [? if eprlf_formed: <td>[+ itamil_eprlf +]%</td> ?]
+
+                  [? if telo_formed: <td>[+ itamil_telo +]%</td> ?]
+
+                  [? if endlf_formed: <td>[+ itamil_endlf +]%</td> ?]
+
+                  [? if dplf_formed: <td>[+ itamil_dplf +]%</td> ?]
+                  
+                  [? if pflt_formed: <td>[+ itamil_pflt +]%</td> ?]
+
+                  [? if ucpf_formed: <td>[+ itamil_ucpf +]%</td> ?]
+
+                  <td>[+ itamil_nonvoter +]%</td>
+               </tr>
+               <tr>
+                  <th><span class="wide_tooltip-wrap">Others<span class="wide_tooltip-tip">This grouping consists of many groups such as the Burghers(Descendents of Europeans and locals), Kafirs(Desendents of African slaves and soliders brought by the Portuguese), the ethnic Chinese and the indigeoneus "Vedda" whose history predates all other groups.</span></span></th>
+
+                  <td>[+ other_slfp +]%</td>
+
+                  <td>[+ other_jvp +]%</td>
+                  <td>[+ other_cpsl +]%</td>
+                  <td>[+ other_lssp +]%</td>
+
+                  <td>[+ other_nssp +]%</td>
+                  <td>[+ other_tulf +]%</td>
+                  <td>[+ other_cwc +]%</td>
+
+                  <td>[+ other_unp +]%</td>
+                  <td>[+ other_actc +]%</td>
+
+                  [? if slpp_formed: <td>[+ other_slpp +]%</td> ?]
+
+                  [? if slmp_formed: <td>[+ other_slmp +]%</td> ?]
+                  
+                  [? if slmc_formed: <td>[+ other_slmc +]%</td> ?]
+
+                  [? if npp_formed: <td>[+ other_npp +]%</td> ?]
+
+                  [? if mep_formed: <td>[+ other_mep +]%</td> ?]
+
+                  [? if dunf_formed: <td>[+ other_dunf +]%</td> ?]
+
+                  [? if ulpp_formed: <td>[+ other_ulpp +]%</td> ?]
+
+                  [? if eros_formed: <td>[+ other_eros +]%</td> ?]
+
+                  [? if eprlf_formed: <td>[+ other_eprlf +]%</td> ?]
+
+                  [? if telo_formed: <td>[+ other_telo +]%</td> ?]
+
+                  [? if endlf_formed: <td>[+ other_endlf +]%</td> ?]
+
+                  [? if dplf_formed: <td>[+ other_dplf +]%</td> ?]
+                  
+                  [? if pflt_formed: <td>[+ other_pflt +]%</td> ?]
+
+                  [? if ucpf_formed: <td>[+ other_ucpf +]%</td> ?]
+
+                  <td>[+ other_nonvoter +]%</td>
+               </tr>
+            </table>
+
+</div>
+
+= Class:
+
+<div id="class_table" onmouseover="scrollhor('class_table');" style="overflow-y: scroll;">
+
+<table>
+               <tr>
+                  <th></th>     
+               
+                  <td>SLFP</td>
+
+                  <td>JVP</td>
+
+                  <td>CPSL</td>
+
+                  <td>LSSP</td>
+
+                  <td>NSSP</td>
+
+                  <td>TULF</td>
+
+                  <td>CWC</td>
+
+                  <td>UNP</td>
+
+                  <td>ACTC</td>
+
+                  [? if slpp_formed: <td>SLPP</td> ?]
+
+                  [? if slmp_formed: <td>SLMP</td> ?]
+                  
+                  [? if slmc_formed: <td>SLMC</td> ?]
+
+                  [? if npp_formed: <td>NPP</td> ?]
+
+                  [? if mep_formed: <td>MEP</td> ?]
+
+                  [? if dunf_formed: <td>DUNF</td> ?]
+
+                  [? if ulpp_formed: <td>ULPP</td> ?]
+
+                  [? if eros_formed: <td>EROS</td> ?]
+
+                  [? if eprlf_formed: <td>EPRLF</td> ?]
+
+                  [? if telo_formed: <td>TELO</td> ?]
+
+                  [? if endlf_formed: <td>ENDLF</td> ?]
+
+                  [? if dplf_formed: <td>DPLF</td> ?]
+                  
+                  [? if pflt_formed: <td>PFLT</td> ?]
+
+                  [? if ucpf_formed: <td>UCPF</td> ?]
+
+                  <td>Nonvoters</td>
+
+               </tr>
+               <tr>
+                  <th><span class="wide_tooltip-wrap drop-down">Working Class<span class="wide_tooltip-tip">Manual laborers, factory workers, service employees and garment workers.</span></span></th>
+
+                  <td>[+ workers_slfp +]%</td>
+
+                  <td>[+ workers_jvp +]%</td>
+                  <td>[+ workers_cpsl +]%</td>
+                  <td>[+ workers_lssp +]%</td>
+
+                  <td>[+ workers_nssp +]%</td>
+                  <td>[+ workers_tulf +]%</td>
+                  <td>[+ workers_cwc +]%</td>
+
+                  <td>[+ workers_unp +]%</td>
+                  <td>[+ workers_actc +]%</td>
+
+                  [? if slpp_formed: <td>[+ workers_slpp +]%</td> ?]
+
+                  [? if slmp_formed: <td>[+ workers_slmp +]%</td> ?]
+                  
+                  [? if slmc_formed: <td>[+ workers_slmc +]%</td> ?]
+
+                  [? if npp_formed: <td>[+ workers_npp +]%</td> ?]
+
+                  [? if mep_formed: <td>[+ workers_mep +]%</td> ?]
+
+                  [? if dunf_formed: <td>[+ workers_dunf +]%</td> ?]
+
+                  [? if ulpp_formed: <td>[+ workers_ulpp +]%</td> ?]
+
+                  [? if eros_formed: <td>[+ workers_eros +]%</td> ?]
+
+                  [? if eprlf_formed: <td>[+ workers_eprlf +]%</td> ?]
+
+                  [? if telo_formed: <td>[+ workers_telo +]%</td> ?]
+
+                  [? if endlf_formed: <td>[+ workers_endlf +]%</td> ?]
+
+                  [? if dplf_formed: <td>[+ workers_dplf +]%</td> ?]
+                  
+                  [? if pflt_formed: <td>[+ workers_pflt +]%</td> ?]
+
+                  [? if ucpf_formed: <td>[+ workers_ucpf +]%</td> ?]
+
+                  <td>[+ workers_nonvoter +]%</td>
+
+               </tr>
+               <tr>
+                  <th><span class="wide_tooltip-wrap">Middle Class<span class="wide_tooltip-tip">Professionals such as doctors, lawyers, teachers, and small business owners educated in former colonial schools.</span></span></th>
+
+                  <td>[+ middle_slfp +]%</td>
+
+                  <td>[+ middle_jvp +]%</td>
+                  <td>[+ middle_cpsl +]%</td>
+                  <td>[+ middle_lssp +]%</td>
+
+                  <td>[+ middle_nssp +]%</td>
+                  <td>[+ middle_tulf +]%</td>
+                  <td>[+ middle_cwc +]%</td>
+
+                  <td>[+ middle_unp +]%</td>
+                  <td>[+ middle_actc +]%</td>
+
+                  [? if slpp_formed: <td>[+ middle_slpp +]%</td> ?]
+
+                  [? if slmp_formed: <td>[+ middle_slmp +]%</td> ?]
+                  
+                  [? if slmc_formed: <td>[+ middle_slmc +]%</td> ?]
+
+                  [? if npp_formed: <td>[+ middle_npp +]%</td> ?]
+
+                  [? if mep_formed: <td>[+ middle_mep +]%</td> ?]
+
+                  [? if dunf_formed: <td>[+ middle_dunf +]%</td> ?]
+
+                  [? if ulpp_formed: <td>[+ middle_ulpp +]%</td> ?]
+
+                  [? if eros_formed: <td>[+ middle_eros +]%</td> ?]
+
+                  [? if eprlf_formed: <td>[+ middle_eprlf +]%</td> ?]
+
+                  [? if telo_formed: <td>[+ middle_telo +]%</td> ?]
+
+                  [? if endlf_formed: <td>[+ middle_endlf +]%</td> ?]
+
+                  [? if dplf_formed: <td>[+ middle_dplf +]%</td> ?]
+                  
+                  [? if pflt_formed: <td>[+ middle_pflt +]%</td> ?]
+
+                  [? if ucpf_formed: <td>[+ middle_ucpf +]%</td> ?]
+
+                  <td>[+ middle_nonvoter +]%</td>
+               </tr>
+               <tr>
+                  <th><span class="wide_tooltip-wrap">Rural Class<span class="wide_tooltip-tip">Primarily engaged in agriculture, mining and fishing away from the cities and in villages and small towns.</span></span></th>
+
+                  <td>[+ rural_slfp +]%</td>
+
+                  <td>[+ rural_jvp +]%</td>
+                  <td>[+ rural_cpsl +]%</td>
+                  <td>[+ rural_lssp +]%</td>
+
+                  <td>[+ rural_nssp +]%</td>
+                  <td>[+ rural_tulf +]%</td>
+                  <td>[+ rural_cwc +]%</td>
+
+                  <td>[+ rural_unp +]%</td>
+                  <td>[+ rural_actc +]%</td>
+
+                  [? if slpp_formed: <td>[+ rural_slpp +]%</td> ?]
+
+                  [? if slmp_formed: <td>[+ rural_slmp +]%</td> ?]
+                  
+                  [? if slmc_formed: <td>[+ rural_slmc +]%</td> ?]
+
+                  [? if npp_formed: <td>[+ rural_npp +]%</td> ?]
+
+                  [? if mep_formed: <td>[+ rural_mep +]%</td> ?]
+
+                  [? if dunf_formed: <td>[+ rural_dunf +]%</td> ?]
+
+                  [? if ulpp_formed: <td>[+ rural_ulpp +]%</td> ?]
+
+                  [? if eros_formed: <td>[+ rural_eros +]%</td> ?]
+
+                  [? if eprlf_formed: <td>[+ rural_eprlf +]%</td> ?]
+
+                  [? if telo_formed: <td>[+ rural_telo +]%</td> ?]
+
+                  [? if endlf_formed: <td>[+ rural_endlf +]%</td> ?]
+
+                  [? if dplf_formed: <td>[+ rural_dplf +]%</td> ?]
+                  
+                  [? if pflt_formed: <td>[+ rural_pflt +]%</td> ?]
+
+                  [? if ucpf_formed: <td>[+ rural_ucpf +]%</td> ?]
+
+                  <td>[+ rural_nonvoter +]%</td>
+               </tr>
+               <tr>
+                  <th><span class="wide_tooltip-wrap">Upper Class<span class="wide_tooltip-tip">A small elite comprising industrialists, senior executives, and political leaders.</span></span></th>
+
+                  <td>[+ upper_slfp +]%</td>
+
+                  <td>[+ upperjvp +]%</td>
+                  <td>[+ upper_cpsl +]%</td>
+                  <td>[+ upper_lssp +]%</td>
+
+                  <td>[+ upper_nssp +]%</td>
+                  <td>[+ upper_tulf +]%</td>
+                  <td>[+ upper_cwc +]%</td>
+
+                  <td>[+ upper_unp +]%</td>
+                  <td>[+ upper_actc +]%</td>
+
+                  [? if slpp_formed: <td>[+ upper_slpp +]%</td> ?]
+
+                  [? if slmp_formed: <td>[+ upper_slmp +]%</td> ?]
+                  
+                  [? if slmc_formed: <td>[+ upper_slmc +]%</td> ?]
+
+                  [? if npp_formed: <td>[+ upper_npp +]%</td> ?]
+
+                  [? if mep_formed: <td>[+ upper_mep +]%</td> ?]
+
+                  [? if dunf_formed: <td>[+ upper_dunf +]%</td> ?]
+
+                  [? if ulpp_formed: <td>[+ upper_ulpp +]%</td> ?]
+
+                  [? if eros_formed: <td>[+ upper_eros +]%</td> ?]
+
+                  [? if eprlf_formed: <td>[+ upper_eprlf +]%</td> ?]
+
+                  [? if telo_formed: <td>[+ upper_telo +]%</td> ?]
+
+                  [? if endlf_formed: <td>[+ upper_endlf +]%</td> ?]
+
+                  [? if dplf_formed: <td>[+ upper_dplf +]%</td> ?]
+                  
+                  [? if pflt_formed: <td>[+ upper_pflt +]%</td> ?]
+
+                  [? if ucpf_formed: <td>[+ upper_ucpf +]%</td> ?]
+
+                  <td>[+ upper_nonvoter +]%</td>
+               </tr>
+            </table>
+</div>
+
+Support for Tamil nationalism: [+ tamil_nationalism_disp +]%
+
+Support for Sinhalese nationalism: [+ sinhala_nationalism_disp +]%
+
+@interior
+
+= Interior Policies
+
+{!<img src="img/interior.jpg" style="width: 85%; height: auto; border: 4px solid rgb(43, 43, 43); padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3); display: block; margin: 0 auto;">!}
+
+FTZ working conditions: [+ ftz_conditions : equality +]
+
+Labour union strenght: [+ labour_unions_strenght : union_strenght +] 
+
+<span style="color: #00008B;">**SLFP**</span> control: [+ labour_union_slfp_control +]% 
+
+<span style="color: #006400;">**UNP**</span> control: [+ labour_union_unp_control +]% 
+
+<span style="color: #A91101;">**LSSP**</span> control: [+ labour_union_lssp_control +]% 
+
+<span style="color: #E52B50;">**CWC**</span> control: [+ labour_union_cwc_control +]% 
+
+<span style="color: #65000B;">**CPSL**</span> control: [+ labour_union_cpsl_control +]% 
+
+<span style="color: #FF2226;">**JVP**</span> control: [+ labour_union_jvp_control +]% 
+
+<span style="color: #545454;">**Independent**</span> control: [+ labour_union_independent_control +]% 
+
+
+= Student Unions
+
+Student union strenght: [+ student_union_strenght : union_strenght +] 
+
+<span style="color: #00008B;">**SLFP**</span> control: [+ student_union_slfp_control +]%
+
+<span style="color: #FF2226;">**JVP**</span> control: [+ student_union_jvp_control +]% 
+
+<span style="color: #65000B;">**CPSL**</span> control: [+ student_union_cpsl_control +]% 
+
+<span style="color: #A91101;">**LSSP**</span> control: [+ student_union_lssp_control +]% 
+
+<span style="color: #545454;">**Independent**</span> control: [+ student_union_independent_control +]% 
+
+
+= Sri Lankan Tamils
+
+Equal language status for Sinhala & Tamil: [+ tamil_sinhala_only +] 
+
+North east autonomy: [+ north_east_autonomy : autonomy +] 
+
+Eastern colonisation schemes: [+ eastern_colonisation +] 
+
+Infastructure: [+ north_east_infastructure : eduinfa +] 
+
+Education: [+ north_east_education : eduinfa +] 
+
+Unemployment: [+ north_east_unemployment : employment +] 
+
+Land reform: [+ north_east_land : reform +]   
+
+Caste prevalance: [+ lankan_tamil_caste_prevalance : dissent +]
+
+= Indian tamils
+
+Indian Tamil Franchisment: [+ itamil_franchsiment : control +]  
+
+Dissent: [+ itamil_dissent : dissent +]   
+
+Education: [+ itamil_education : eduinfa +]   
+
+Infastructure: [+ itamil_infastructure : eduinfa +]   
+
+Land reform: [+ itamil_land : reform +]   
+
+Caste prevalance: [+ indian_tamil_caste_prevalance : dissent +]   
+ 
+= Rural South West
+
+Education: [+ south_education : eduinfa +]   
+   
+Infastructure: [+ south_infastructure : eduinfa +]   
+   
+Poverty: [+ south_poverty : poverty +]   
+   
+Land reforms: [+ south_land : reform +]   
+
+Caste prevalance: [+ sinhalese_caste_prevalance : dissent +]   
+ 
+= Security forces
+
+Prevention of Terrorism act:  [+ pta_strenght : pta +]   
+
+Police reform:  [+ police_reform : reform +]   
+ 
+= Corruption
+
+Corruption:  [+ corruption_strenght : corruption +]   
+ 
+= Women
+
+Equal Pay:  [+ women_equal_pay +]   
+
+Patriarchy:  [+ women_patriarchy : equality +]   
+
+Muslim marraige and divorce act:  [? if muslim_marraige_law = 1 : Enforced ?] [? if muslim_marraige_law = 0 : Reformed ?]   
+
+
+= Free Press
+
+Private Radio:  [? if private_radio = 0 : Government Monopoly ?] [? if private_radio = 1 : Allowed ?]   
+
+Private Television:  [? if private_tv = 0 : Government Monopoly ?] [? if private_tv = 1 : Allowed ?]   
+
+Wartime Censor:  [? if wartime_censor = 0 : In Effect ?] [? if wartime_censor = 1 : Abolished ?]   
+
+
+@economy
+on-arrival: {!
+if (Q.unemployed) {
+    Q.unemployed_2 = Q.unemployed.toFixed(1);
+}
+if (Q.inflation) {
+    Q.inflation_2 = Q.inflation.toFixed(1);
+}
+Q.economic_growth_2 = '0';
+if (Q.economic_growth) {
+    Q.economic_growth_2 = Q.economic_growth.toFixed(1);
+}
+if (Q.inequality) {
+    Q.inequality_2 = Q.inequality.toFixed(1);
+}
+if (Q.total_nationalisation) {
+    Q.total_nationalisation_2 = ((Q.textile_national + Q.fishing_national + Q.agriculture_national + Q.tea_national + Q.mining_national + Q.tourism_national)/18)*100;
+}
+if (Q.total_nationalisation_2) {
+    Q.total_nationalisation_3 = Q.total_nationalisation_2.toFixed(1);
+}
+!}
+
+= Economy
+
+{!<img src="img/economy.jpg" style="width: 83%; height: auto; border: 4px solid rgb(43, 43, 43); padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3); display: block; margin: 0 auto;">!}
+
+Inflation Rate: [+ inflation_2 +]% 
+
+Unemployment: [+ unemployed_2 +]% 
+
+Economic Growth: [+ economic_growth_2 +]% 
+
+Gov. Budget: [+ budget +] 
+
+Terms of Trade: [+ trade +] 
+
+Foreign Debt: [+ foreign_debt +] 
+
+Economic Inequality: [+ inequality_2 : equality +] 
+
+Agriculture: [+ agriculture : sectordev +]      
+Nationalisation: [+ agriculture_national : nationalisation +]    
+
+Banking: [+ banking : sectordev +]      
+Nationalisation: [+ banking_national : nationalisation +]  
+
+Commerce & Trade: [+ commerce : sectordev +]      
+Nationalisation: [+ commerce_national : nationalisation +] 
+
+Fishing: [+ fishing : sectordev +]      
+Nationalisation: [+ fishing_national : nationalisation +]      
+
+Manufacturing: [+ manufacturing : sectordev +]      
+Nationalisation: [+ manufacturing_national : nationalisation +]    
+
+Mining: [+ mining : sectordev +]      
+Nationalisation: [+ mining_national : nationalisation +]    
+
+Ports: [+ ports : sectordev +]      
+Nationalisation: [+ ports_national : nationalisation +]    
+
+Rubber: [+ rubber : sectordev +]      
+Nationalisation: [+ rubber_national : nationalisation +] 
+
+Tea: [+ tea : sectordev +]      
+Nationalisation: [+ tea_national : nationalisation +]      
+
+Textile & apparel: [+ textile : sectordev +]      
+Nationalisation: [+ textile_national : nationalisation +] 
+     
+Tourism: [+ tourism : sectordev +]      
+Nationalisation: [+ tourism_national : nationalisation +]      
+
+Lower Income Tax: [+ lower_tax_rates +] 
+
+Upper Income Tax: [+ Upper_tax_rates +] 
+
+Tariff Rates: [+ tariffs +] 
+
+FTZ Tax Holidays: [? if ftz_holidays = 1 : Active ?][? if ftz_holidays = 0 : Inactive ?] 
+
+
+@foreign
+on-arrival: {!
+if (Q.india_tamil_support) {
+    Q.india_tamil_support_2 = Q.india_tamil_support.toFixed(1);
+}
+if (Q.tamil_nadu_tamil_support) {
+    Q.tamil_nadu_tamil_support_2 = Q.tamil_nadu_tamil_support.toFixed(1);
+}
+if (Q.ipkf_morale) {
+    Q.ipkf_morale_2 = Q.ipkf_morale.toFixed(1);
+}
+
+!}
+
+= Foreign Relations
+
+{!<img src="img/foreign.jpg" style="width: 83%; height: auto; border: 4px solid rgb(43, 43, 43); padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3); display: block; margin: 0 auto;">!}
+
+USA:[+ usa_relation : relationships +]    
+
+USSR: [+ ussr_relation : relationships +] 
+
+UK: [+ uk_relation : relationships +]   
+
+China: [+ china_relation : relationships +] 
+
+Japan: [+ japan_relation : relationships +] 
+
+Israel: [+ israel_relation : relationships +] 
+
+Iraq: [+ iraq_relation : relationships +]   
+
+Pakistan: [+ pakistan_relation : relationships +]
+
+Non Alligned Movement: [+ nam_relation : relationships +]   
+
+India: [+ india_relation : relationships +]       
+
+[? if saarc_formed = 1 : SAARC FORMED ?]
+
+[? if safta_formed = 1 : SAFTA SIGNED ?]
+
+= Indian Involvement
+
+{!<img src="img/tamil_militants_2.jpg" style="width: 83%; height: auto; border: 4px solid rgb(43, 43, 43); padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3); display: block; margin: 0 auto;">!}
+
+Indian Prime Minister: [+ india_pm +]
+
+Indian Ruling Party: [+ india_government +] 
+
+Indian Militant Support: [+ india_tamil_support_2 : militancy +] 
+
+Tamil Nadu CM: [+ tamil_nadu_leader +] 
+
+Tamil Nadu Party: [+ tamil_nadu_government +] 
+
+TN Militant Support: [+ tamil_nadu_tamil_support_2 : militancy +] 
+
+[? if ipkf_formed = 1 : 
+Status: [+ ipkf_formed : gstatus +] 
+Est. Strength: [+ ipkf_size +]k
+Morale: [+ ipkf_morale_2 : loyalty +]
+?]
+
+@party
+on-arrival: {!
+Q.left_strength_pct = Q.left_strength / 60 * 100;
+Q.nationalist_strength_pct = Q.nationalist_strength / 60 * 100;
+Q.left_dissent_pct = Q.left_dissent / 50 * 100;
+Q.nationalist_dissent_pct = Q.nationalist_dissent / 50 * 100;
+
+Q.sirimavo_split_pct = (Q.split_sirimavo_victory / 3) * 100;
+Q.maitripala_split_pct = (Q.split_maitripala_victory / 3) * 100;
+!}
+
+{!<img src="img/SLFP_Banner.png" style="width: 94%; height: auto; border: 4px solid #1919a9; padding: 4px; background-color: var(--content-bg-color); box-shadow: inset 2px 2px 6px rgba(0,0,0,0.3);">!}
+
+[? if the_split = 1 : 
+{!
+<div style="text-align: center; margin-bottom: 15px; margin-top: 10px; padding: 10px; background: var(--content-bg-color);">
+  <div style="font-weight: bold; font-size: 1.2em; margin-bottom: 8px;">Disputed Party Leadership</div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+    <div style="text-align: left;">
+      <span class="mytooltip no-highlight" style="cursor: help;">
+        <img src="img/sirimavo_fight.svg" style="width: 40px; height: 40px; vertical-align: middle;" />
+        <span class="mytooltiptext" style="font-weight: bold;"><img src="img/sirimavo_fight.svg"/>Sirimavo Bandaranaike (Left)</span>
+      </span>
+    </div>
+    <div style="text-align: right;">
+      <span class="mytooltip no-highlight" style="cursor: help;">
+        <img src="img/maitripala_fight.svg" style="width: 40px; height: 40px; vertical-align: middle;" />
+        <span class="mytooltiptext" style="font-weight: bold; "><img src="img/maitripala_fight.svg"/>Maithripala Senanayake (Nationalists)</span>
+      </span>
+    </div>
+  </div>
+  <div style="height: 14px; background: var(--content-bg-color); border-radius: 7px; overflow: hidden; border: 1px solid #011c57; display: flex; width: 100%;">
+    <div style="background: #A91101; height: 100%; width: !}[+ sirimavo_split_pct +]{!%; transition: width 0.4s;"></div>
+    <div style="background: transparent; height: 100%; flex-grow: 1;"></div>
+    <div style="background: #0F52BA; height: 100%; width: !}[+ maitripala_split_pct +]{!%; transition: width 0.4s;"></div>
+  </div>
+</div>
+!}
+?]
+
+[? if the_split = 0 : Party Leader : [+ slfp_leader +] ?]
+
+Parliamentary Leader : [+ slfp_parliament_leader +]
+
+= Internal Factions of the <span style="color: #00008B;">**SLFP**</span>
+
+[? if left_split = 1 : The majority of the Left faction has split to form the SLMP ?]
+Left Strength
+{!
+<div style="height: 8px; background: #f06e60; border-radius: 4px; overflow: hidden; border: 1px solid #000000;">
+  <div style="background: #A91101; opacity: 0.7; height: 100%; width: !}[+ left_strength_pct +]{!%; transition: width 0.4s;"></div>
+</div>
+!}
+
+Left Dissent
+{!
+<div style="height: 8px; background: #f06e60; border-radius: 4px; overflow: hidden; border: 1px solid #000000;">
+  <div style="background: #A91101; opacity: 0.7; height: 100%; width: !}[+ left_dissent_pct +]{!%; transition: width 0.4s;"></div>
+</div>
+!}
+
+[? if nationalist_split = 1 : The majority of the Nationalists faction has split to form the SLPP ?]
+Nationalists Strength
+{!
+<div style="height: 8px; background: #83b1f5; border-radius: 4px; overflow: hidden; border: 1px solid #000000;">
+  <div style="background: #0F52BA; opacity: 0.7; height: 100%; width: !}[+ nationalist_strength_pct +]{!%; transition: width 0.4s;"></div>
+</div>
+!}
+
+Nationalists Dissent
+{!
+<div style="height: 8px; background: #83b1f5; border-radius: 4px; overflow: hidden; border: 1px solid #000000;">
+  <div style="background: #0F52BA; opacity: 0.7; height: 100%; width: !}[+ nationalist_dissent_pct +]{!%; transition: width 0.4s;"></div>
+</div>
+!}

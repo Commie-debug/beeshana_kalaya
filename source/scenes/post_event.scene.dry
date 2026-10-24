@@ -1,0 +1,423 @@
+title: Post Event
+new-page: true
+on-arrival: {!
+Q.last_advisor_action = 0;
+Q.last_cabinet_action = 0;
+// make sure no stat is below 0.
+for (var c of Q.classes) {
+    for (var party of Q.parties) {
+        if (Q[c+'_'+party] < 0) {
+            Q[c+'_'+party] = 0;
+        }
+    }
+}
+
+Q.pro_republic = Math.round(Q.pro_republic);
+Q.nationalism = Math.round(Q.nationalism);
+Q.socialism = Math.round(Q.socialism);
+
+if (Q.pro_republic < 0) {
+    Q.pro_republic = 0;
+}
+if (Q.pro_republic >= 100) {
+    Q.pro_republic = 99;
+}
+// re-calculate party support
+// calculate normalized class voting for the achievements
+for (var c of Q.classes) {
+    var class_votes = 0;
+    for (var party of Q.parties) {
+        if (Q[c+'_'+party] < 0) {
+            Q[c+'_'+party] = 0;
+        }
+        class_votes += Q[c+'_'+party];
+    }
+    for (var party of Q.parties) {
+        Q[c + '_' + party + '_normalized'] = 100*Q[c+'_'+party]/class_votes;
+        Q[c + '_' + party + '_display'] = Math.round(100*Q[c+'_'+party]/class_votes);
+    }
+}
+// calculate support for each of the parties
+var total_support = 0; 
+for (var party of Q.parties) {
+    var party_support = 0;
+    for (var c of Q.classes) {
+        if (Q.old_demographics) { 
+            party_support += Q[c]*Q[c+'_'+party];
+        } else  { 
+            party_support += Q[c]*Q[c+'_'+party+'_normalized'];
+        } 
+    }
+    Q[party + '_support'] = party_support;
+    total_support += party_support; 
+}
+// 2. normalize support (fraction)
+for (var party of Q.parties) {
+    Q[party+'_normalized'] = Q[party + '_support']/total_support;
+    Q[party+'_votes'] = Math.round(Q[party+'_normalized']*100);
+    Q[party+'_votes_display'] = Math.round(Q[party+'_normalized']*100);
+}
+
+
+// set faction strength/dissent to 0
+for (var c of Q.factions) {
+    if (Q[c+'_dissent'] < 0) {
+        Q[c+'_dissent'] = 0;
+    } else if (Q[c+'_dissent'] >= 100) {
+        Q[c+'_dissent'] = 99;
+    }
+    if (Q[c+'_strength'] < 0) {
+        Q[c+'_strength'] = 0;
+    }
+}
+
+if (Q.unemployed <= 1) {
+    Q.unemployed = 1;
+}
+
+// re-calculate dissent.
+var total_strength = Q.left_strength + Q.nationalist_strength;
+
+// normalize strength for the different factions
+Q.left_strength = 100*Q.left_strength/total_strength;
+Q.nationalist_strength = 100*Q.nationalist_strength/total_strength;
+
+var total_dissent = Q.left_strength*Q.left_dissent + Q.nationalist_strength*Q.nationalist_dissent;
+
+//militant control
+var total_ne_control = Q.jaffna_d_control + Q.kilinochchi_d_control + Q.mannar_d_control + Q.mullaitivu_d_control + Q.vavuniya_d_control + Q.batticaloa_d_control + Q.ampara_d_control + Q.trincomalee_d_control;  
+
+Q.militant_control = (80 - total_ne_control) * 1/8
+
+//normalize labour union control
+var total_labour_control = Q.labour_union_slfp_control + Q.labour_union_unp_control + Q.labour_union_cpsl_control + Q.labour_union_lssp_control + Q.labour_union_cwc_control + Q.labour_union_jvp_control + Q.labour_union_independent_control;
+if (total_labour_control > 0) {
+    Q.labour_union_slfp_control = Math.round(100 * Q.labour_union_slfp_control / total_labour_control * 10) / 10;
+    Q.labour_union_unp_control = Math.round(100 * Q.labour_union_unp_control / total_labour_control * 10) / 10;
+    Q.labour_union_cpsl_control = Math.round(100 * Q.labour_union_cpsl_control / total_labour_control * 10) / 10;
+    Q.labour_union_lssp_control = Math.round(100 * Q.labour_union_lssp_control / total_labour_control * 10) / 10;
+    Q.labour_union_cwc_control = Math.round(100 * Q.labour_union_cwc_control / total_labour_control * 10) / 10;
+    Q.labour_union_jvp_control = Math.round(100 * Q.labour_union_jvp_control / total_labour_control * 10) / 10;
+    //independent gets theremainder 
+    Q.labour_union_independent_control = Math.round((100 - Q.labour_union_slfp_control - Q.labour_union_unp_control - Q.labour_union_cpsl_control - Q.labour_union_lssp_control - Q.labour_union_cwc_control - Q.labour_union_jvp_control) * 10) / 10;
+}
+
+//normalize student union control
+var total_student_control = Q.student_union_jvp_control + Q.student_union_cpsl_control + Q.student_union_slfp_control + Q.student_union_lssp_control + Q.student_union_independent_control;
+if (total_student_control > 0) {
+    Q.student_union_jvp_control = Math.round(100 * Q.student_union_jvp_control / total_student_control * 10) / 10;
+    Q.student_union_cpsl_control = Math.round(100 * Q.student_union_cpsl_control / total_student_control * 10) / 10;
+    Q.student_union_slfp_control = Math.round(100 * Q.student_union_slfp_control / total_student_control * 10) / 10;
+    Q.student_union_lssp_control = Math.round(100 * Q.student_union_lssp_control / total_student_control * 10) / 10;
+    //independent gets the remainder 
+    Q.student_union_independent_control = Math.round((100 - Q.student_union_jvp_control - Q.student_union_cpsl_control - Q.student_union_slfp_control - Q.student_union_lssp_control) * 10) / 10;
+}
+
+//normalize party support (class)
+for (var cls of Q.classes) {
+    var total_class_support = 0;
+    
+    var cls_var_name = cls;
+    if (cls === 'workers') {
+        cls_var_name = 'workers';
+    }
+    
+    // Include non-voters in the total
+    var nonvoter_support = Q[cls_var_name + '_nonvoter'] || 0;
+    if (nonvoter_support < 0) {
+        nonvoter_support = 0;
+    }
+    total_class_support += nonvoter_support;
+    
+    for (var party of Q.parties) {
+        if (Q[cls + '_' + party] < 0) {
+            Q[cls + '_' + party] = 0;
+        }
+        total_class_support += Q[cls + '_' + party];
+    }
+    
+    if (total_class_support > 0) {
+        //normalize non-voters
+        Q[cls_var_name + '_nonvoter'] = Math.round(100 * nonvoter_support / total_class_support * 10) / 10;
+        
+        for (var party of Q.parties) {
+            Q[cls + '_' + party] = Math.round(100 * Q[cls + '_' + party] / total_class_support * 10) / 10;
+        }
+        
+        //calculate new total (should be close to 100)
+        var new_total = Q[cls_var_name + '_nonvoter'];
+        for (var party of Q.parties) {
+            new_total += Q[cls + '_' + party];
+        }
+        
+        //give remainder to non-voters
+        Q[cls_var_name + '_nonvoter'] = Math.round((Q[cls_var_name + '_nonvoter'] + (100 - new_total)) * 10) / 10;
+    }
+}
+
+//normalize party support (ethnic)
+for (var ethnic of Q.ethnic) {
+
+    if (ethnic === 'itamil') {
+        var franchisement = Q.itamil_franchisement || 1;
+        if (franchisement < 1) franchisement = 1;
+        if (franchisement > 10) franchisement = 10;
+
+        var min_nonvoter = 55 - (franchisement - 1) * 5;
+        min_nonvoter = Math.round(min_nonvoter * 10) / 10;
+
+        //nonvoter can rise above the floor over time, but never fall below it
+        var current_nonvoter = Q.itamil_nonvoter || 0;
+        if (current_nonvoter < min_nonvoter) {
+            current_nonvoter = min_nonvoter;
+        }
+
+        var party_total = 0;
+        for (var party of Q.parties) {
+            if (Q['itamil_' + party] < 0) {
+                Q['itamil_' + party] = 0;
+            }
+            party_total += Q['itamil_' + party];
+        }
+
+        var available_share = 100 - current_nonvoter;
+
+        if (party_total > 0) {
+            for (var party of Q.parties) {
+                Q['itamil_' + party] = Math.round(available_share * Q['itamil_' + party] / party_total * 10) / 10;
+            }
+        }
+
+        Q.itamil_nonvoter = Math.round(current_nonvoter * 10) / 10;
+
+        //give remainder to non-voters, same as every other group
+        var new_total = Q.itamil_nonvoter;
+        for (var party of Q.parties) {
+            new_total += Q['itamil_' + party];
+        }
+
+        Q.itamil_nonvoter = Math.round((Q.itamil_nonvoter + (100 - new_total)) * 10) / 10;
+
+        //enforce the floor again in case rounding somehow pushed it below
+        if (Q.itamil_nonvoter < min_nonvoter) {
+            Q.itamil_nonvoter = min_nonvoter;
+        }
+
+        continue;
+    }
+
+    var total_ethnic_support = 0;
+    
+    //include non-voters in the total
+    var nonvoter_support = Q[ethnic + '_nonvoter'] || 0;
+    if (nonvoter_support < 0) {
+        nonvoter_support = 0;
+    }
+    total_ethnic_support += nonvoter_support;
+    
+    for (var party of Q.parties) {
+        if (Q[ethnic + '_' + party] < 0) {
+            Q[ethnic + '_' + party] = 0;
+        }
+        total_ethnic_support += Q[ethnic + '_' + party];
+    }
+    
+    if (total_ethnic_support > 0) {
+        //normalize non-voters
+        Q[ethnic + '_nonvoter'] = Math.round(100 * nonvoter_support / total_ethnic_support * 10) / 10;
+        
+        //normalize parties
+        for (var party of Q.parties) {
+            Q[ethnic + '_' + party] = Math.round(100 * Q[ethnic + '_' + party] / total_ethnic_support * 10) / 10;
+        }
+        
+        //calculate new total 
+        var new_total = Q[ethnic + '_nonvoter'];
+        for (var party of Q.parties) {
+            new_total += Q[ethnic + '_' + party];
+        }
+        
+        //give remainder to non-voters
+        Q[ethnic + '_nonvoter'] = Math.round((Q[ethnic + '_nonvoter'] + (100 - new_total)) * 10) / 10;
+    }
+}
+Q.dissent = 0.01*total_dissent/total_strength;
+Q.dissent_percent = Q.dissent*100;
+console.log('new dissent: ' + Q.dissent);
+
+if (Q.dissent < 0) {
+    Q.dissent = 0;
+} else if (Q.dissent > 0.95) {
+    Q.dissent = 0.95;
+}
+
+// 1. update dates
+if (Q.month_actions >= 1) {
+    Q.time += 1;
+    Q.month_actions = 0;
+
+    // Advance by 2 weeks (bi-weekly system)
+    if (Q.week == 1) {
+        // Move from week 1 to week 3 of same month
+        Q.week = 3;
+    } else {
+        // Move from week 3 to week 1 of next month
+        Q.week = 1;
+        Q.month += 1;
+        if (Q.month >= 13) {
+            Q.month = 1;
+            Q.year += 1;
+            if (Q.historical_mode) {
+                Q.resources += 2;
+            }
+        }
+    }
+
+    // decrement timers (only when month actually changes for monthly timers)
+    for (var timer of Q.timers) {
+        if (Q[timer+'_timer'] && Q[timer+'_timer'] > 0) {
+            Q[timer+'_timer'] -= 1;
+        }
+    }
+
+
+    // append to historical party support records
+    var party_support_results = {'date': new Date(Q.year, Q.month - 1)};
+    for (var party of Q.parties) {
+        party_support_results[party] = Q[party + '_normalized']*100;
+    }
+    Q.party_support_records.push(party_support_results);
+    Q.economic_records.push({'date': new Date(Q.year, Q.month - 1),
+                             'inflation': Q.inflation,
+                             'unemployment': Q.unemployed});
+    // change economic stats...
+    // we're basically implicity drawing a Philips curve
+    // budget deficits lead to some inflation
+    if (Q.budget <= 0 && Q.budget > -2 && Q.inflation < 2.5) {
+        Q.inflation += 0.1;
+    }
+    if (Q.budget <= -2 && Q.budget > -5 && Q.inflation < 5) {
+        Q.inflation += 0.2;
+        if (Q.unemployed >= 12) {
+            Q.inflation -= 0.1;
+        }
+    }
+    if (Q.budget <= -5 && Q.inflation < 10) {
+        Q.inflation += 0.3;
+        if (Q.unemployed >= 15) {
+            Q.inflation -= 0.1;
+        }
+    }
+    // deflation is bad
+    if (Q.inflation < -0.5 && Q.inflation > -5 && Q.unemployed < 15) {
+        Q.unemployed += 0.2;
+    }
+    if (Q.inflation <= -5 && Q.unemployed < 20) {
+        Q.unemployed += 0.3;
+    }
+    // economic growth
+    if (Q.economic_growth < -0.5 && Q.unemployed <= 18) {
+        Q.unemployed += 0.1;
+    }
+    if (Q.economic_growth < -5 && Q.unemployed <= 28) {
+        Q.unemployed += 0.1;
+    }
+    if (Q.economic_growth >= 2 && Q.unemployed >= 17) {
+        Q.unemployed -= 0.1;
+    }
+    if (Q.economic_growth >= 4 && Q.unemployed >= 12) {
+        Q.unemployed -= 0.1;
+    }
+    if (Q.economic_growth >= 6 && Q.unemployed >= 7) {
+        Q.unemployed -= 0.1;
+    }
+    if (Q.economic_growth >= 8 && Q.unemployed >= 3) {
+        Q.unemployed -= 0.1;
+    }
+    if (Q.economic_growth >= 4 && Q.inflation >= 7.5) {
+        Q.economic_growth -= 0.1;
+    }
+    if (Q.economic_growth >= -2.5 && Q.inflation <= -5) {
+        Q.economic_growth -= 0.1;
+    }
+    if (Q.economic_growth >= 7) {
+        Q.economic_growth -= 0.1;
+    }
+    if (Q.economic_growth >= 10) {
+        Q.economic_growth -= 0.2;
+    }
+    if (Q.economic_growth >= 12) {
+        Q.economic_growth -= 0.3;
+    }
+
+    Q.random_event_yes = 0;
+    Q.attack_random_events = 0;
+    Q.strike_random_events = 0;
+    Q.rebel_attack_events = 0;
+
+    //random eventer
+    Q.random_event_yes = Math.random();
+    
+    if (Q.random_event_yes > 0.95) {
+        let eventSelected = false;
+        let emergencyBreak = 0; 
+        
+        while (!eventSelected && emergencyBreak < 100) {
+            let roll = Math.random(); 
+            
+            if (roll <= 0.9) {
+                Q.attack_random_events = 1;
+                eventSelected = true;
+            } 
+            //add more categories if need be
+            else if (roll > 0.9 && roll <= 1.0) {
+                Q.strike_random_events = 1;
+                eventSelected = true;
+            } 
+            else {
+                if (Q.black_july == 1) { 
+                    Q.rebel_attack_events = 1;
+                    eventSelected = true;
+                }
+            }
+            
+            emergencyBreak++;
+        }
+        if (emergencyBreak >= 100) {
+            console.log("No valid random events found. Skipping.");
+        }
+    }
+}
+
+Q.has_event = 0;
+// check if there are any cards in #event, and then go to main if not.
+var scene = this.game.scenes['post_event.events_choice'];
+var choices = this._compileChoices(scene);
+if (choices && choices[0].title != "Continue...") {
+    Q.has_event = 1;
+} else {
+    Q.has_event = 0;
+}
+// pre-load all of the event images
+if (this.ui && this.ui.show_portraits) {
+    for (var choice of choices) {
+        var cc = this.game.scenes[choice.id];
+        if (cc.faceImage) {
+            var im = new Image();
+            im.url = cc.faceImage;
+        }
+    }
+}
+
+if (typeof window !== "undefined" && window.generateBar) {
+}
+!}
+go-to: events_choice if has_event = 1; main if has_event = 0 and difficulty >= 0; main.main_easy if has_event = 0 and difficulty < 0
+
+= Week [+ week +] [+ month : month +] [+ year +]
+
+@events_choice
+
+- #event
+
+# This scene is solely for updating numbers after events, and routing to special events.

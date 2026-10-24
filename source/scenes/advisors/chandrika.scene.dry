@@ -1,0 +1,146 @@
+title: Chandrika Kumaratunga
+is-pinned-card: true
+tags: advisor, left
+card-image: img/portraits/KumaratungeChandrika.jpg
+view-if: chandrika_advisor = 1
+new-page: true
+#face-image: img/portraits/KumaratungeChandrika.jpg
+
+= Chandrika Kumaratunge
+
+Daughter of Sirimavo Bandaranaike and husband of movie star Vijaya Kumaratunge. Mrs Kumaratunge is a rising figure in the SLFP. She is on left of the split and has sympathies for the Tamil plight.
+
+- @meditation
+- @tamil
+- @setvar
+- @root: Return to main
+
+@meditation
+title: Healing the split
+subtitle: As a pragmatist, Mrs Kumaratunge can reduce tensions among the party factions.
+unavailable-subtitle: [? if advisor_action_timer > 0 : [+ advisor_action_timer +] months before next advisor action. ?]
+choose-if: advisor_action_timer = 0
+on-arrival: advisor_action_timer = 5; advisor_action_time = time; left_dissent -= 5; nationalist_dissent -= 5; 
+
+Tensions among the left and nationalists have reduced.
+
+@tamil
+title: Tamil appeal
+subtitle: Mrs Kumaratunge has sympathies with the marginalised Tamils, she can help the SLFP build ties with the Tamil parties and reduce Tamil radicalisation.
+unavailable-subtitle: [? if advisor_action_timer > 0 : [+ advisor_action_timer +] months before next advisor action. ?]
+choose-if: advisor_action_timer = 0
+on-arrival: advisor_action_timer = 6; tulf_relation += 6*(1-dissent); actc_relation += 6*(1-dissent); nationalist_dissent += 5; tamil_radicalisation -= (1+(left_strenght/100));
+
+The SLFP develops ties to the Tamil parties giving them new found confidence in the eyes of Tamils, the nationalists anger is palpable
+
+@setvar
+title: Galactic Manipulation
+on-display: {!
+if (!window.dendryUI.injectVarSetter) {
+    window.dendryUI.injectVarSetter = function() {
+        var container = document.getElementById('var-setter');
+        if (!container) return;
+        container.innerHTML = '';
+
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'e.g. spd_r = 25  or  party_relations.SPD.KPD = 80';
+        input.style.cssText =
+            'background:#111; color:#0f0; border:1px solid #0f0;' +
+            'padding:6px 10px; font-family:monospace; font-size:13px;' +
+            'width:60%; outline:none; border-radius:2px;';
+
+        var btn = document.createElement('button');
+        btn.textContent = 'Set';
+        btn.style.cssText =
+            'margin-left:8px; background:#0f0; color:#000; border:none;' +
+            'padding:6px 12px; font-family:monospace; font-size:13px;' +
+            'cursor:pointer; border-radius:2px;';
+
+        var status = document.createElement('p');
+        status.style.cssText = 'color:#f55; font-size:12px; margin-top:6px; height:16px;';
+
+        function parseValue(valStr) {
+            if (valStr === 'true') return true;
+            if (valStr === 'false') return false;
+            if (valStr === 'null') return null;
+            if (!isNaN(parseFloat(valStr)) && isFinite(valStr)) return parseFloat(valStr);
+            if ((valStr.startsWith('"') && valStr.endsWith('"')) ||
+                (valStr.startsWith("'") && valStr.endsWith("'"))) {
+                return valStr.slice(1, -1);
+            }
+            return valStr;
+        }
+
+        function applySet() {
+            var raw = input.value.trim();
+            if (!raw) return;
+
+            var match = raw.match(/^([a-zA-Z_][a-zA-Z0-9_.]*)\s*=\s*(.+)$/);
+            if (!match) {
+                status.style.color = '#f55';
+                status.textContent = '✗ Format must be: varname = value';
+                return;
+            }
+
+            var path = match[1].split('.');
+            var valStr = match[2].trim();
+            var val = parseValue(valStr);
+
+            var target = Q;
+            for (var i = 0; i < path.length - 1; i++) {
+                var part = path[i];
+                if (target[part] === undefined || target[part] === null || typeof target[part] !== 'object') {
+                    target[part] = {};
+                }
+                target = target[part];
+            }
+
+            var lastKey = path[path.length - 1];
+            var oldVal = target[lastKey];
+            target[lastKey] = val;
+
+            status.style.color = '#5f5';
+            status.textContent = '✓ ' + match[1] + ': ' + JSON.stringify(oldVal) + ' → ' + JSON.stringify(val);
+            input.value = '';
+
+            if (window.updateSidebar) window.updateSidebar();
+            if (window.updateBottomPanel) window.updateBottomPanel();
+
+            var engine = window.dendryUI.dendryEngine;
+            var sceneId = engine.state.sceneId;
+            var scene = engine.game.scenes[sceneId];
+            if (scene) {
+                var contentEl = document.getElementById('content');
+                if (contentEl) {
+                    var displayContent = engine._makeDisplayContent(scene.content, true);
+                    var html = window.dendryUI.contentToHTML.convert(displayContent);
+                   
+                    var pages = contentEl.querySelectorAll('.page');
+                    if (pages.length) {
+                        var lastPage = pages[pages.length - 1];
+                        lastPage.innerHTML = html;
+                    }
+                }
+            }
+        }
+
+        btn.addEventListener('click', applySet);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') applySet();
+        });
+
+        container.appendChild(input);
+        container.appendChild(btn);
+        container.appendChild(status);
+    };
+}
+
+window.dendryUI.injectVarSetter();
+!}
+
+= Set any Q variable directly. Format: varname = value, or nested.path = value
+
+{!<div id="var-setter"></div>!}
+
+- @return: Back

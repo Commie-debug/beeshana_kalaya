@@ -1,0 +1,116 @@
+title: District Development Council elections announced
+view-if: year = 1981 and month = 6 and week = 1
+max-visits: 1
+tags: event
+new-page: true
+
+= District Development Council election results
+
+The ballots have been counted and the results are now in for the District Development Council's 156 elected seats for every district. [? if ddc_elections_boycott = 0 : Lets hope our campaining has paid off ?] [? if ddc_elections_boycott = 1 : Without our participation, the UNP is likely to sweep the Sinhalese south west  ?]
+
+Voter turnout was very low, with only 20-30% of voters showing up to vote.
+
+- @results: Lets see the results
+
+@results
+on-arrival: in_election = 0
+go-to: slfp_results if ddc_elections_boycott == 0; cannon_results if ddc_elections_boycott == 1; cannon_results
+
+Island Wide Results are as follows
+
+@slfp_results
+on-arrival: slfp_local_gov = 1;
+
+<table>
+  <tr>
+    <th style="text-align: left; padding-right: 15px;">Party</th>
+    <th style="text-align: left; padding-right: 15px;">Seats(Elected)</th>
+    <th style="text-align: left; padding-right: 15px;">Council's Controlled</th>
+  </tr>
+  <tr>
+    <td>UNP(& CWC)</td>
+    <td>83</td>
+    <td>17</td>
+  </tr>
+  <tr>
+    <td>SLFP[? if cpslbacking == 1 or nsspbacking == 1 or lsspbacking == 1 : ([? if cpslbacking == 1 : CPSL ?][? if lsspbacking == 1 : LSSP ?][? if nsspbacking == 1 : NSSP ?])?]</td>
+    <td>42</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>TULF</td>
+    <td>21</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>JVP</td>
+    <td>10</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>ACTC</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+</table>
+
+Jaffna, Mannar, Vavuniya, Batticaloa, Trincomalee and Mullaitivu were wins for the TULF, despite them and the UNP winning the same number of seats in Mannar, Trincomalee and Vavuniya, the TULF had the majority of votes and thus the Chairmanship of those councils.
+
+The SLFP was able to win 42 seats across the island and even control over 1 district council, Gampaha an SLFP stronghold. Elsewhere the SLFP has been elected to a few seats. The JVP despite their high hopes won only 10 seats and no district control.
+
+Every other district was a UNP sweep with all seats in Matara, Monaragala and Nuwara Eliya being won by the UNP. Every Council except Gampaha, Jaffna, Mannar, Vavuniya, Batticaloa, Trincomalee and Mullaitivu being controlled by the UNP.
+
+The legitimacy of the elections has been called into question. Voter turnout was remarkably low and there are alleged reports of inconsistencies with several counting stations receiving their ballot boxes late. Rumours are that as much as 20% of casted ballots are spoiled. 
+
+In the days before voting as part of what the police said were measures to ensure the elections went smoothly, several TULF leaders & MP's including Amirthalingam, VN Navaratnam, V Dharmalingham and M Sivasithambaram were arrested and detained briefly and their offices searched.
+
+The situation combined with the violence that had taken place just before the voting was enough to rile up Election Commissioner Piyasekera, enough to where he directly berrated the president himself and threatened to resign.
+
+Whether its all an indication of discontent with the UNP regime is too be seen.
+
+- @return: Local government card added to government affairs deck.
+
+@cannon_results
+on-arrival: lssp_relation += 1.5; cpsl_relation += 1.5; nssp_relation += 1.5; slfp_local_gov = 0;
+
+<table>
+  <tr>
+    <th style="text-align: left; padding-right: 15px;">Party</th>
+    <th style="text-align: left; padding-right: 15px;">Seats(Elected)</th>
+    <th style="text-align: left; padding-right: 15px;">Council's Controlled</th>
+  </tr>
+  <tr>
+    <td>UNP(& CWC)</td>
+    <td>119</td>
+    <td>18</td>
+  </tr>
+  <tr>
+    <td>TULF</td>
+    <td>21</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>JVP</td>
+    <td>16</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>ACTC</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+</table>
+
+Jaffna, Mannar, Vavuniya, Batticaloa, Trincomalee and Mullaitivu were wins for the TULF, despite them and the UNP winning the same number of seats in Mannar, Trincomalee and Vavuniya, the TULF had the majority of votes and thus the Chairmanship of those councils.
+
+Due to our boycott all other districts were won by the UNP, including Kandy, Nuwara Eliya, Matara, Kurunegala, Moneragala, Ratnapura, and Kegalle where the UNP ran completely uncontested. Every other district is a victory for the UNP with a few seats won by the JVP, who despite their high hopes did not win any district outright.
+
+It was unlikely we would have won much if we took part, at the very least the legitimacy of the elections has been called into question. Voter turnout was low and there are alleged reports of inconsistencies with several counting stations receiving their ballot boxes late. Rumours are that as much as 10% of casted ballots are spoiled. 
+
+In the days before voting as part of what the police said were measures to ensure the elections went smoothly, several TULF leaders & MP's including Amirthalingam, VN Navaratnam, V Dharmalingham and M Sivasithambaram were arrested and detained briefly and their offices searched.
+
+The situation combined with the violence that had taken place just before the voting was enough to rile up Election Commissioner Piyasekera, enough to where he directly berrated the president himself and threatened to resign.
+
+Whether its all an indication of discontent with the UNP regime is too be seen.
+
+- @return: Our relationships with the other boycotting parties have improved.

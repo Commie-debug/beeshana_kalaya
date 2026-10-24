@@ -1,0 +1,149 @@
+title: District Development Council
+new-page: true
+is-pinned-card: true
+choose-if: slfp_local_gov = 0 and local_gov_timer <= 0
+on-arrival: {!  !}
+card-image: img/DDC.jpg
+
+= District Development Council's
+
+District Development Councils exist as the 
+
+@municipalities_menu
+
+{!<div class="municipal-control-map" aria-label="CHP control in the last municipal election"></div>!}
+
+- @istanbul: Istanbul Municipality
+- @east: Eastern Municipalities
+- @governance: Municipalities Across the Republic
+- @gecekondu: Gecekondu Issue
+- @back_to_main: Return to main menu.
+- @no: We will not take an action at the moment.
+
+@istanbul
+
+- @municipalities_menu: Return to municipal planning.
+
+@east
+
+- @municipalities_menu: Return to municipal planning.
+
+@governance
+
+[+ {! return AnatolianMunicipalities.html(Q); !} +]
+
+- @waterlines: Improve Water and Sewage Infrastructure
+- @publictransport: Expand Public Transportation
+- @libraries: Establish City Libraries
+- @halkekmek: Establish Halk Ekmek Bakeries
+- @roads: Modernize Urban Roads
+- @municipalities_menu: Return to municipal planning.
+
+@gecekondu
+
+Houses illegally constructed by rural-to-urban migrants unable to afford formal housing, often erected rapidly enough to avoid immediate demolition and therefore called *gecekondu*, “placed at night”, have grown into vast informal districts around our expanding cities. These neighborhoods often lack proper roads, sewage, clean water, public transportation and the other services expected of modern urban life. Returning their inhabitants to the countryside is neither realistic nor desirable. Our task must instead be to slow uncontrolled migration where possible while gradually transforming these settlements into proper parts of our cities and providing their inhabitants with an honorable standard of living.
+
+[+ {! return AnatolianMunicipalities.html(Q); !} +]
+
+- @migration: Place Restrictions and Difficulties on Rural-to-Urban Migration
+- @infrastructure: Start Laying Out Infrastructure in Gecekondu Districts
+- @connect: Connect Gecekondu Districts into Proper Urban Areas
+- @regularization: Balance Legalization and Demolition of Gecekondu Property
+- @planning: Begin Large-Scale Urban Planning
+- @transport: Invest in Public Transportation and Public Services in Gecekondu Districts
+- @industry: Develop Local Industry and Economic Activity in Gecekondu Districts
+- @municipalities_menu: Return to municipal planning.
+
+@waterlines
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"waterlines") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"waterlines"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"waterlines"); !}
+
+Urban municipalities frequently struggle to provide sufficient clean water and sewage infrastructure for their growing populations.
+
+@publictransport
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"publictransport") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"publictransport"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"publictransport"); !}
+
+Municipal buses, routes, depots and other forms of public transportation remain inadequate in many cities.
+
+@libraries
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"libraries") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"libraries"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"libraries"); !}
+
+Build municipal libraries to support education, literacy and the consumption of literature.
+
+@halkekmek
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"halkekmek") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"halkekmek"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"halkekmek"); !}
+
+Establish municipally operated bakeries under the Halk Ekmek programme to produce affordable bread, ease the effects of inflation and support working families.
+
+@roads
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"roads") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"roads"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"roads"); !}
+
+As the Republic has, for better or worse, shifted heavily toward road and automobile transport, many urban areas now urgently require modern paved roads. Invest in paving and improving municipal road networks.
+
+@migration
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"migration") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"migration"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"migration"); !}
+
+Slow continuing migration and the growth of new informal settlements while improving conditions for their existing inhabitants.
+
+@infrastructure
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"infrastructure") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"infrastructure"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"infrastructure"); !}
+
+Extend water, sewage, electricity and roads into informal districts.
+
+@connect
+view-if: {! return AnatolianMunicipalities.count(Q,"infrastructure") >= 4; !}
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"connect") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"connect"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"connect"); !}
+
+Connect the completed infrastructure networks to the surrounding city, integrating these neighborhoods into its services.
+
+@regularization
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"regularization") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"regularization"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"regularization"); !}
+
+Legalize viable homes and clear unsafe construction that cannot be integrated, preparing neighborhoods for gradual redevelopment.
+
+@planning
+view-if: {! return AnatolianMunicipalities.count(Q,"regularization") >= 8; !}
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"planning") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"planning"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"planning"); !}
+
+Transform regularized districts through planned redevelopment into safer apartment neighborhoods. Their residents remain part of the city.
+
+@transport
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"transport") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"transport"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"transport"); !}
+
+Extend reliable transport and municipal services to connect residents with the wider city.
+
+@industry
+choose-if: {! return !AnatolianMunicipalities.reason(Q,"industry") !}
+unavailable-subtitle: [+ {! return AnatolianMunicipalities.reason(Q,"industry"); !} +]
+on-arrival: {! AnatolianMunicipalities.apply(Q,"industry"); !}
+
+Support small businesses, workshops and local industry so these neighborhoods can develop their own economic life.
+
+@no
+on-arrival: {! AnatolianCardActions.commit(Q); !}
+go-to: main.main_easy if difficulty < 0; main if difficulty >= 0
+
+@back_to_main
+on-arrival: {! AnatolianCardActions.back(this); !}
+go-to: main.main_easy if difficulty < 0; main if difficulty >= 0

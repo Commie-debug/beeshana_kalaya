@@ -1,0 +1,37 @@
+title: United States Presidential Elections
+new-page: true
+max-visits: 1
+tags: event
+view-if: year = 1984 and month = 11 and week = 1
+on-arrival: {!
+!}
+on-display: {!
+    window.showSceneImage('img/logos/USA_Logo.png'); 
+!}
+
+= 1984 United States Presidential Elections
+
+The results are....
+
+<div style="text-align: center; margin: 1em 0;">
+    <img src="img/us_election/1984_pres_election.svg" style="width: 100%; max-width: 500px;">
+</div>
+
+
+{!<table>!} 
+{!<tr><td>Candidate</td><td>Party</td><td>Electoral College Votes</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#e81c23'> </div> !} Ronald Reagan {!</td><td>!} <span class="mytooltip no-highlight"><span style="color: #e81c23;">**Republican**</span><span class="mytooltiptext"><img src="img/logos/US/Republican_Logo.png"/>Republican Party (Grand Old Party)</span</span> {!</td><td>!} 525 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#0044ca'> </div> !} Walter Mondale {!</td><td>!} <span class="mytooltip no-highlight"><span style="color: #0044ca;">**Democratic**</span><span class="mytooltiptext"><img src="img/logos/US/Democratic_Logo.png"/>Democratic Party</span</span> {!</td><td>!} 13 {!</td></tr>!} 
+
+{!</table>!}
+
+
+- @next: President Ronald Reagan has won a landslide victory, securing a second term in office.
+
+@next
+
+His Democratic rival Walter Mondale suffered a crushing defeat, carrying only his home state of Minnesota and the District of Columbia. The Republicans swept nearly the entire country.
+
+Overall this means a continuation of the Reagan administration's hardline anti-communist foreign policy and economic conservatism, with the scale of this victory likely to embolden Reagan to pursue his domestic and international objectives with even less restraint.

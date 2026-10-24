@@ -1,0 +1,53 @@
+title: Tamil Nadu Elections
+new-page: true
+max-visits: 1
+tags: event
+view-if: year = 1984 and month = 12 and week = 3
+on-arrival: {!
+    
+!}
+
+
+= 1984 Tamil Nadu Legislative Assembly Elections
+
+The results are....
+
+= Alliance map
+
+<div style="text-align: center; margin: 1em 0;">
+    <img src="img/tamilnadu_election/tn_election_1984.svg" style="width: 100%; max-width: 500px;">
+</div>
+
+= Tamil Nadu Legislative Assembly
+
+{!<svg id="tamil_nadu_diagram" style="width: 100%; height: 100%; display: block; margin: 0 auto;"></svg>!}
+
+{!<table>!} 
+{!<tr><td>Party/Coalition</td><td>Seats</td><td>Vote %</td><td>Change</td></tr>!}
+
+{!<tr style="background-color: transparent;"><td><strong>!}AIADMK Led Alliance{!</strong></td><td><strong>!}195{!</strong></td><td><strong>!}53.9%{!</strong></td><td></td></tr>!} 
+{!<tr><td style="padding-left: 20px;"><div class="box" style='background-color:#00FF00'> </div> !} AIADMK {!</td><td>!} 132 {!</td><td>!} 37% {!</td><td>!} +3 {!</td></tr>!} 
+{!<tr><td style="padding-left: 20px;"><div class="box" style='background-color:#76D7EA'> </div> !} INC {!</td><td>!} 61 {!</td><td>!} 16.3% {!</td><td>!} +30 {!</td></tr>!} 
+{!<tr><td style="padding-left: 20px;"><div class="box" style='background-color:#008080'> </div> !} Gandhi Kamraj National Congress {!</td><td>!} 2 {!</td><td>!} 0.6% {!</td><td>!} -4 {!</td></tr>!} 
+
+{!<tr style="background-color: transparent;"><td><strong>!}DMK Led Alliance{!</strong></td><td><strong>!}34{!</strong></td><td><strong>!}37.0%{!</strong></td><td></td></tr>!} 
+{!<tr><td style="padding-left: 20px;"><div class="box" style='background-color:#FF0000'> </div> !} DMK {!</td><td>!} 24 {!</td><td>!} 29.3% {!</td><td>!} -13 {!</td></tr>!} 
+{!<tr><td style="padding-left: 20px;"><div class="box" style='background-color:#CC0D0E'> </div> !} <span class="mytooltip no-highlight"><span style="color: #CC0D0E;">**CPI(M)**</span><span class="mytooltiptext"><img src="img/logos/India/CPI_M_Logo.png"/>Communist Party of India (Marxist)</span></span> {!</td><td>!} 5 {!</td><td>!} 2.8% {!</td><td>!} -6 {!</td></tr>!} 
+{!<tr><td style="padding-left: 20px;"><div class="box" style='background-color:#1F75FE'> </div> !} <span class="mytooltip no-highlight"><span style="color: #1F75FE;">**JNP**</span><span class="mytooltiptext"><img src="img/logos/India/JNP_Logo.png"/>Janata Party</span></span> {!</td><td>!} 3 {!</td><td>!} 2.3% {!</td><td>!} +1 {!</td></tr>!} 
+{!<tr><td style="padding-left: 20px;"><div class="box" style='background-color:#F50122'> </div> !} <span class="mytooltip no-highlight"><span style="color: #b00600ff;">**CPI**</span><span class="mytooltiptext"><img src="img/logos/India/CPI_Logo.png"/>Communist Party of India</span></span> {!</td><td>!} 2 {!</td><td>!} 2.6% {!</td><td>!} -7 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#808080'> </div> !} **Independent** {!</td><td>!} 4 {!</td><td>!} 7.5% {!</td><td>!} -4 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#800080ff'> </div> !} Ambedkar Kranti Dal {!</td><td>!} 1 {!</td><td>!} 0.7% {!</td><td>!} 0 {!</td></tr>!} 
+
+{!</table>!}
+
+- @next: A victory for the incumbent AIADMK government of M G Ramachandran
+
+@next
+
+The victory can be attributed to the wave of sympathy across India for Indira Gandhi. Whose assasination earlier this year has triggered a surge in support for the INC and her son Rajiv Gandhi.
+
+In addition, Chief Minister for Tamil Nadu M G Ramachandran had recently fallen ill generating even more sympathy for him and his party. The opposition DMK and its alliance lost seats and were also harmed by the INC's defection to the AIADMK alliance.
+
+For us in Sri Lanka, it means a continuation of Tamil Nadu's support for the Tamil militants and their headbutting with the central government for further aid to them.

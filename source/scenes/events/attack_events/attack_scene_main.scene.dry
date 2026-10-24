@@ -1,0 +1,33 @@
+title: Political Attack
+subtitle: A rival party has launched an offensive against the SLFP.
+view-if: attack_random_events == 1
+tags: event
+new-page: true
+priority: 3
+on-arrival: {!
+    Q.attack_random_events = 0;
+    
+    var valid_attacks = ['unp_attack'];
+    if (Q.jvp_relation > 20 && Q.jvp_reconciliation == 0){
+        valid_attacks.push('jvp_attack');
+    }
+    if (Q.cpsl_relation > 20){
+        valid_attacks.push('cpsl_attack');
+    }
+    if (Q.lssp_relation > 20){
+        valid_attacks.push('lssp_attack');
+    }
+    if (Q.cwc_relation > 20){
+        valid_attacks.push('cwc_attack');
+    }
+    if (Q.tulf_relation > 20){
+        valid_attacks.push('tulf_attack');
+    }
+    if (Q.slmc_formed == 1 && Q.slmc_relation < 14.9){
+        valid_attacks.push('slmc_attack');
+    }
+    //need to add every other party here except some like NSSP and ACTC
+    var randomIndex = Math.floor(Math.random() * valid_attacks.length);
+    Q.selected_attack = valid_attacks[randomIndex];
+!}
+go-to: cpsl_attack if selected_attack == "cpsl_attack"; lssp_attack if selected_attack == "lssp_attack"; cwc_attack if selected_attack == "cwc_attack"; tulf_attack if selected_attack == "tulf_attack"; unp_attack if selected_attack == "unp_attack"; slmc_attack if selected_attack == "slmc_attack"

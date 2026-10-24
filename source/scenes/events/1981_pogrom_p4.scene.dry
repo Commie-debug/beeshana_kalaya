@@ -1,0 +1,96 @@
+title: Anti tamil violence across the island
+view-if: year = 1981 and month = 8 and week = 3
+max-visits: 1
+on-arrival: ltte_strength += 6; plote_strength += 6; eros_strength += 4; telo_strength += 5; eprlf_strength += 4; tamil_nationalism += 7; sltamil_unp -= 10; itamil_unp -= 10; sinhala_nationalism += 8; gov_support -= 6; tamil_morale += 0.1; tamil_radicalisation += 1; state_of_emergency = 1; state_of_emergency_timer = 2;
+tags: event
+new-page: true
+
+= Renewed violence across the island
+
+Reports of ethnic violence have been reported in the Colombo city, Ratnapura district and in eastern border villages. The attacks involved multiple cases of arson against Tamil businesses, homes and entire villages. Unlike previous incidents, the victims have also been from the Indian Tamil community. Many were forced to flee into the jungles, temples and government schools to avoid the violence. Police were reported in multiple cases to have either stood by as rioter's rampaged, or directly took part and encouraged the violence. 
+
+A state of emergency has been declared in effected areas.
+
+The SLFP will..
+
+- @slfp1: Condemn the violence.
+- @slfp2: Use our limited DDC powers to help victims.
+- @slfp3: Turn a blind eye.
+
+@slfp1
+on-arrival:{!
+    sinhala_nationalism += 5;
+    tamil_nationalism += 5;
+    itamil_slfp += 3;
+    sltamil_slfp += 2;
+    tulf_relation += 5;
+    actc_relation += 3;
+    cwc_relation += 4;
+!}
+
+Our condemnations prevented our Tamil supporters from leaving, but our lack of any actual action still does not sit well with the victims.
+
+- @next: Continue...
+
+@slfp2
+on-arrival:{!
+    itamil_slfp += 5;
+    sinhala_slfp -= 3;
+    sinhala_nationalism += 5;
+    tamil_nationalism += 5;
+    left_strength += 4;
+    sltamil_slfp += 4;
+    tulf_relation += 5;
+    actc_relation += 3;
+    cwc_relation += 4;
+!}
+choose-if: slfp_local_gov = 1
+unavailable-subtitle: The SLFP does not have any influence in the DDC's
+
+Despite how powerless the DDC's are and our lack of authority on security forces, we were able to organise and agitate for aid provisions and shelter to the displaced. 
+
+The show of good will increased our support among effected communities, rebuilding trust slowly.
+
+- @next: Continue...
+
+@slfp3
+on-arrival:{!
+    sinhala_nationalism += 8;
+    tamil_nationalism += 6;
+    nationalist_strength += 4;
+    sinhala_slfp += 8;
+    itamil_slfp -= 5;
+    sltamil_slfp -= 4;
+    tulf_relation -= 5;
+    actc_relation -= 3;
+    cwc_relation -= 4;
+!}
+
+- @next: Continue...
+
+@next
+
+Early estimates put the death toll between 7 and 25 and displaced at least 35 thousand, mostly Indian Tamils. 
+
+The CWC called for some kind of response from its ally in the UNP over these incidents. President JR Jayawardene seemingly agreed with the CWC saying "What is the example we as leaders of the governing party are setting to our followers and the rest of our countrymen? ... I must have reason to be proud of the party of which I am leader. If I cannot it is better for me to retire ... and let those who believe that the harming of innocent people and property that has happened recently is the way to solve the problem that faces this multi-racial, multi-religious and multi-caste society takeover the leadership of the party".
+
+Many including in the CWC, TULF and ACTC blame the recent attacks on the statements made last week by members of the UNP in parliament. The MP from Ratnapura was expelled and replaced and a cabinet member went abroad for some time for their roles in instigating the violence. The MP's involved with the racial rhetoric in Early August were quick to expunge their statements.
+
+A high-level meeting was held between the TULF, UNP and CWC to cool down tensions. The TULF reiterated and confirmed their non-violent stance to greater autonomy. The UNP also made moves to include more Tamils in local police. Despite negotiations, the Sinhalese view this as capitulation towards seperatists and Tamils are enraged from a lack of investigation by police.
+
+- @and: The militants?
+
+@and
+on-arrival:{!
+    jaffna_d_control -= 3;
+    batticaloa_d_control -= 1;
+    trincomalee_d_control -= 1;
+    vavuniya_d_control -= 2;
+    mullaitivu_d_control -= 2;
+    mannar_d_control -= 2;
+    kilinochchi_d_control -= 2;
+!}
+
+The militants, chiefly the PLOTE and LTTE gained further support for their violent cause. The TULF's passivity to the riots and their participation in the DDC election's are the main reasons for the change in attitude. In addition the militants have further built up their presence, building safe houses in the cities, and camps deep in the jungles. 
+
+At least for now the violence has seemingly come to an end. But the UNP's support among Tamils has reduced, the militants have gained strenght and nationalist fervour is rising. In response a state of emergency has been declared briefly in case violence flares up again, the SLFP needs to watch out.

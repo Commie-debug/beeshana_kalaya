@@ -1,0 +1,10 @@
+title: The LSSP Offensive
+
+= The LSSP
+
+The LSSP labels the SLFP as another bourgeois party serving in interests of the rich and elite.
+
+- @moveon: We are immedietly faced with a decline in our support among working class and some rural Sri Lankan's.
+
+@moveon
+on-arrival: rural_slfp -= 0.5; workers_slfp -= 1.5; 

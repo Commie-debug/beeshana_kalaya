@@ -1,0 +1,567 @@
+title: Nominations for the upcoming presidential elections are being submitted
+view-if: ((year = next_pres_election_year and month >= (next_pres_election_month - 1)) or (year > next_pres_election_year)) and (week = next_pres_election_week)
+max-visits: 1
+new-page: true
+tags: event
+on-display: {! window.showSceneImage('img/election_banner.png'); !}
+
+= Nominees for Presidential Election [+ next_pres_election_month : month +], [+ next_pres_election_year +]
+
+#always a month before the presidential election
+
+Nominations are were filled as candidates and their party faculty flooded to the Election Commission building at Rajagiriya, Colombo. The window to submit the application is razor thin and any misteps means they will not be on the ballot.
+
+News starts coming back as to who has correctly filed their candidacy.
+
+- @main_nomination: So what finally happened?
+
+@main_nomination
+on-arrival: {!
+Q.in_election = 1;
+Q.pres_candidates = [];
+Q.pres_candidate_parties = {};
+Q.pres_endorsing_parties = {};
+
+var base_parties = ['slfp', 'unp', 'jvp', 'cpsl', 'lssp', 'nssp', 'tulf', 'actc', 'cwc'];
+var formable_parties = ['slpp', 'slmp', 'slmc', 'npp', 'mep', 'eros', 'dplf', 'pflt', 'ucpf', 'endlf', 'telo', 'eprlf', 'dunf', 'ulpp'];
+var all_party_names = base_parties.slice();
+
+for (var fp of formable_parties) {
+    if (Q[fp + '_formed']) {
+        all_party_names.push(fp);
+    }
+}
+
+var partyToCoalition = {};
+var coalitionMembers = {};
+var coalitionLeader = {};
+
+for (var party of all_party_names) {
+    partyToCoalition[party] = -1;
+}
+
+if (Q.active_coalitions && Q.active_coalitions.length > 0) {
+    for (var c = 0; c < Q.active_coalitions.length; c++) {
+        var coalition = Q.active_coalitions[c];
+        coalitionMembers[c] = [];
+        if (coalition.members && coalition.members.length > 0) {
+            coalitionLeader[c] = coalition.members[0].toLowerCase();
+        }
+        for (var m = 0; m < coalition.members.length; m++) {
+            var memberParty = coalition.members[m].toLowerCase();
+            if (all_party_names.indexOf(memberParty) !== -1) {
+                partyToCoalition[memberParty] = c;
+                coalitionMembers[c].push(memberParty);
+            }
+        }
+    }
+}
+
+for (var pname of all_party_names) {
+    var cid = Q[pname + '_coalition_id'];
+    if (cid !== undefined && cid >= 0) {
+        partyToCoalition[pname] = cid;
+        if (!coalitionMembers[cid]) {
+            coalitionMembers[cid] = [];
+        }
+        if (coalitionMembers[cid].indexOf(pname) === -1) {
+            coalitionMembers[cid].push(pname);
+        }
+        if (!coalitionLeader[cid]) {
+            coalitionLeader[cid] = pname;
+        }
+    }
+}
+
+for (var party of all_party_names) {
+    if (Q[party + '_pres_yes'] === 0) continue;
+
+    var endorsement = Q[party + '_pres_endorsement'];
+    var candidate = Q[party + '_pres_candidate'];
+
+    if (!endorsement || endorsement === '') {
+        if (candidate && candidate !== '') {
+            if (Q.pres_candidates.indexOf(candidate) === -1) {
+                Q.pres_candidates.push(candidate);
+                Q.pres_candidate_parties[candidate] = party;
+                if (!Q.pres_endorsing_parties[candidate]) {
+                    Q.pres_endorsing_parties[candidate] = [];
+                }
+            }
+            if (Q.pres_endorsing_parties[candidate].indexOf(party) === -1) {
+                Q.pres_endorsing_parties[candidate].push(party);
+            }
+        }
+    } else {
+        var endorsed_party = endorsement.toLowerCase();
+        var endorsed_candidate = Q[endorsed_party + '_pres_candidate'];
+
+        if (endorsed_candidate && endorsed_candidate !== '') {
+            if (!Q.pres_endorsing_parties[endorsed_candidate]) {
+                Q.pres_endorsing_parties[endorsed_candidate] = [];
+            }
+            if (Q.pres_endorsing_parties[endorsed_candidate].indexOf(party) === -1) {
+                Q.pres_endorsing_parties[endorsed_candidate].push(party);
+            }
+        }
+    }
+}
+
+for (var cid in coalitionMembers) {
+    var leader = coalitionLeader[cid];
+    if (!leader) continue;
+    if (Q[leader + '_pres_yes'] === 0) continue;
+
+    var leaderCandidate = Q[leader + '_pres_candidate'];
+    if (!leaderCandidate || leaderCandidate === '') continue;
+
+    if (Q.pres_candidates.indexOf(leaderCandidate) === -1) {
+        Q.pres_candidates.push(leaderCandidate);
+        Q.pres_candidate_parties[leaderCandidate] = leader;
+    }
+
+    if (!Q.pres_endorsing_parties[leaderCandidate]) {
+        Q.pres_endorsing_parties[leaderCandidate] = [];
+    }
+
+    var members = coalitionMembers[cid];
+    for (var mem of members) {
+        if (Q[mem + '_pres_yes'] === 0) continue;
+        if (Q.pres_endorsing_parties[leaderCandidate].indexOf(mem) === -1) {
+            Q.pres_endorsing_parties[leaderCandidate].push(mem);
+        }
+    }
+}
+
+var all_parties_check = base_parties.concat(formable_parties);
+for (var p of all_parties_check) {
+    var isTakingPart = (Q[p + '_pres_yes'] !== 0);
+    var hasOwnCandidate = false;
+    var isInCoalition = (partyToCoalition[p] !== undefined && partyToCoalition[p] >= 0);
+    var isCoalitionLeader = false;
+    var isEndorsing = (Q[p + '_pres_endorsement'] && Q[p + '_pres_endorsement'] !== '');
+
+    for (var candidate of Q.pres_candidates) {
+        if (Q.pres_candidate_parties[candidate] === p) {
+            hasOwnCandidate = true;
+            break;
+        }
+    }
+
+    for (var cid in coalitionLeader) {
+        if (coalitionLeader[cid] === p) {
+            isCoalitionLeader = true;
+            break;
+        }
+    }
+
+    var showInResults = isTakingPart && hasOwnCandidate && !isEndorsing && (!isInCoalition || isCoalitionLeader);
+    Q[p + '_pres_independent'] = showInResults ? 1 : 0;
+}
+
+var independentParties = [];
+for (var p of all_party_names) {
+    if (Q[p + '_pres_independent'] === 1) {
+        independentParties.push(p);
+    }
+}
+
+var nonParticipating = [];
+for (var p of all_party_names) {
+    if (Q[p + '_pres_yes'] === 0) {
+        nonParticipating.push(p);
+    }
+}
+
+var tableHtml = '<table style="text-align:left; border-spacing: 0.5em;"><tr><th>Candidate</th><th>Party</th><th>Supporting Parties</th></tr>';
+for (var i = 0; i < independentParties.length; i++) {
+    var p = independentParties[i];
+    var cand = Q[p + '_pres_candidate'];
+    var partyUp = p.toUpperCase();
+    var color = Q.partyColors[partyUp] || '#888888';
+    var endorsers = Q.pres_endorsing_parties[cand] || [];
+    var endorserNames = [];
+    for (var e of endorsers) {
+        endorserNames.push(e.toUpperCase());
+    }
+    var partyDisplay = window.displayText('<b>' + partyUp + '</b>');
+    tableHtml += '<tr><td>' + cand + '</td><td>' + partyDisplay + '</td><td>' + endorserNames.join(', ') + '</td></tr>';
+}
+tableHtml += '</table>';
+Q.nominees_html = tableHtml;
+
+var badgesHtml = '';
+for (var i = 0; i < nonParticipating.length; i++) {
+    var p = nonParticipating[i];
+    var partyUp = p.toUpperCase();
+    var color = Q.partyColors[partyUp] || '#888888';
+    var partyDisplay = window.displayText('<b>' + partyUp + '</b>');
+    badgesHtml += '<span style="display:inline-flex; align-items:center; gap:0.3em;">' + partyDisplay + '</span>';
+}
+Q.nonparticipating_html = '<p><b>Parties not participating or cannot take part in this election:</b></p><div style="display:flex; flex-wrap:wrap; gap:0.5em; margin-top:0.5em;">' + badgesHtml + '</div>';
+!}
+
+The candidates and the spread of support appeared at the time to be as follows.
+
+[+ nominees_html +]
+
+[+ nonparticipating_html +]
+
+- @jvp_support: We attempted to garner an endorsment from the JVP.
+- @cpsl_support: We attempted to garner an endorsment from the CPSL.
+- @lssp_support: We attempted to garner an endorsment from the LSSP.
+- @nssp_support: We attempted to garner an endorsment from the NSSP.
+- @tulf_support: We attempted to garner an endorsment from the TULF.
+- @actc_support: We attempted to garner an endorsment from the ACTC.
+- @cwc_support: We attempted to garner an endorsment from the CWC.
+- @slpp_support: We attempted to garner an endorsment from the SLPP.
+- @slmp_support: We attempted to garner an endorsment from the SLMP.
+- @slmc_support: We attempted to garner an endorsment from the SLMC.
+- @npp_support: We attempted to garner an endorsment from the NPP.
+- @mep_support: We attempted to garner an endorsment from the MEP.
+- @eros_support: We attempted to garner an endorsment from the EROS.
+- @dplf_support: We attempted to garner an endorsment from the DPLF.
+- @pflt_support: We attempted to garner an endorsment from the PFLT.
+- @ucpf_support: We attempted to garner an endorsment from the UCPF.
+- @endlf_support: We attempted to garner an endorsment from the ENDLF.
+- @telo_support: We attempted to garner an endorsment from the TELO.
+- @eprlf_support: We attempted to garner an endorsment from the EPRLF.
+- @dunf_support: We attempted to garner an endorsment from the DUNF.
+- @ulpp_support: We attempted to garner an endorsment from the ULPP.
+- @return: We have done what we can to gather support for [+ slfp_pres_candidate +], it now comes down to the voters.
+
+@jvp_support
+view-if: jvp_pres_yes = 1 and jvp_pres_endorsement != 'slfp' and (jvp_coalition_id = -1 or jvp_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: jvp_support_yes if jvp_relation > 70; jvp_support_no 
+
+@jvp_support_yes
+on-arrival: jvp_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The JVP likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@jvp_support_no
+go-to: main_nomination
+
+The JVP sadly did not agree however and decided to continue their present support.
+
+@cpsl_support
+view-if: cpsl_pres_yes = 1 and cpsl_pres_endorsement != 'slfp' and (cpsl_coalition_id = -1 or cpsl_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: cpsl_support_yes if cpsl_relation > 70; cpsl_support_no 
+
+@cpsl_support_yes
+on-arrival: cpsl_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The CPSL likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@cpsl_support_no
+go-to: main_nomination
+
+The CPSL sadly did not agree however and decided to continue their present support.
+
+@lssp_support
+view-if: lssp_pres_yes = 1 and lssp_pres_endorsement != 'slfp' and (lssp_coalition_id = -1 or lssp_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: lssp_support_yes if lssp_relation > 70; lssp_support_no 
+
+@lssp_support_yes
+on-arrival: lssp_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The LSSP likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@lssp_support_no
+go-to: main_nomination
+
+The LSSP sadly did not agree however and decided to continue their present support.
+
+@nssp_support
+view-if: nssp_pres_yes = 1 and nssp_pres_endorsement != 'slfp' and (nssp_coalition_id = -1 or nssp_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: nssp_support_yes if nssp_relation > 70; nssp_support_no 
+
+@nssp_support_yes
+on-arrival: nssp_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The NSSP likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@nssp_support_no
+go-to: main_nomination
+
+The NSSP sadly did not agree however and decided to continue their present support.
+
+@tulf_support
+view-if: tulf_pres_yes = 1 and tulf_pres_endorsement != 'slfp' and (tulf_coalition_id = -1 or tulf_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: tulf_support_yes if tulf_relation > 70; tulf_support_no 
+
+@tulf_support_yes
+on-arrival: tulf_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The TULF likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@tulf_support_no
+go-to: main_nomination
+
+The TULF sadly did not agree however and decided to continue their present support.
+
+@actc_support
+view-if: actc_pres_yes = 1 and actc_pres_endorsement != 'slfp' and (actc_coalition_id = -1 or actc_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: actc_support_yes if actc_relation > 70; actc_support_no 
+
+@actc_support_yes
+on-arrival: actc_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The ACTC likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@actc_support_no
+go-to: main_nomination
+
+The ACTC sadly did not agree however and decided to continue their present support.
+
+@cwc_support
+view-if: cwc_pres_yes = 1 and cwc_pres_endorsement != 'slfp' and (cwc_coalition_id = -1 or cwc_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: cwc_support_yes if cwc_relation > 70; cwc_support_no 
+
+@cwc_support_yes
+on-arrival: cwc_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The CWC likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@cwc_support_no
+go-to: main_nomination
+
+The CWC sadly did not agree however and decided to continue their present support.
+
+@slpp_support
+view-if: slpp_formed = 1 and slpp_pres_yes = 1 and slpp_pres_endorsement != 'slfp' and (slpp_coalition_id = -1 or slpp_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: slpp_support_yes if slpp_relation > 70; slpp_support_no 
+
+@slpp_support_yes
+on-arrival: slpp_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The SLPP likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@slpp_support_no
+go-to: main_nomination
+
+The SLPP sadly did not agree however and decided to continue their present support.
+
+@slmp_support
+view-if: slmp_formed = 1 and slmp_pres_yes = 1 and slmp_pres_endorsement != 'slfp' and (slmp_coalition_id = -1 or slmp_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: slmp_support_yes if slmp_relation > 70; slmp_support_no 
+
+@slmp_support_yes
+on-arrival: slmp_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The SLMP likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@slmp_support_no
+go-to: main_nomination
+
+The SLMP sadly did not agree however and decided to continue their present support.
+
+@slmc_support
+view-if: slmc_formed = 1 and slmc_pres_yes = 1 and slmc_pres_endorsement != 'slfp' and (slmc_coalition_id = -1 or slmc_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: slmc_support_yes if slmc_relation > 70; slmc_support_no 
+
+@slmc_support_yes
+on-arrival: slmc_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The SLMC likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@slmc_support_no
+go-to: main_nomination
+
+The SLMC sadly did not agree however and decided to continue their present support.
+
+@npp_support
+view-if: npp_formed = 1 and npp_pres_yes = 1 and npp_pres_endorsement != 'slfp' and (npp_coalition_id = -1 or npp_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: npp_support_yes if npp_relation > 70; npp_support_no 
+
+@npp_support_yes
+on-arrival: npp_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The NPP likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@npp_support_no
+go-to: main_nomination
+
+The NPP sadly did not agree however and decided to continue their present support.
+
+@mep_support
+view-if: mep_formed = 1 and mep_pres_yes = 1 and mep_pres_endorsement != 'slfp' and (mep_coalition_id = -1 or mep_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: mep_support_yes if mep_relation > 70; mep_support_no 
+
+@mep_support_yes
+on-arrival: mep_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The MEP likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@mep_support_no
+go-to: main_nomination
+
+The MEP sadly did not agree however and decided to continue their present support.
+
+@eros_support
+view-if: eros_formed = 1 and eros_pres_yes = 1 and eros_pres_endorsement != 'slfp' and (eros_coalition_id = -1 or eros_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: eros_support_yes if eros_relation > 70; eros_support_no 
+
+@eros_support_yes
+on-arrival: eros_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The EROS likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@eros_support_no
+go-to: main_nomination
+
+The EROS sadly did not agree however and decided to continue their present support.
+
+@dplf_support
+view-if: dplf_formed = 1 and dplf_pres_yes = 1 and dplf_pres_endorsement != 'slfp' and (dplf_coalition_id = -1 or dplf_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: dplf_support_yes if dplf_relation > 70; dplf_support_no 
+
+@dplf_support_yes
+on-arrival: dplf_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The DPLF likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@dplf_support_no
+go-to: main_nomination
+
+The DPLF sadly did not agree however and decided to continue their present support.
+
+@pflt_support
+view-if: pflt_formed = 1 and pflt_pres_yes = 1 and pflt_pres_endorsement != 'slfp' and (pflt_coalition_id = -1 or pflt_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: pflt_support_yes if pflt_relation > 70; pflt_support_no 
+
+@pflt_support_yes
+on-arrival: pflt_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The PFLT likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@pflt_support_no
+go-to: main_nomination
+
+The PFLT sadly did not agree however and decided to continue their present support.
+
+@ucpf_support
+view-if: ucpf_formed = 1 and ucpf_pres_yes = 1 and ucpf_pres_endorsement != 'slfp' and (ucpf_coalition_id = -1 or ucpf_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: ucpf_support_yes if ucpf_relation > 70; ucpf_support_no 
+
+@ucpf_support_yes
+on-arrival: ucpf_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The UCPF likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@ucpf_support_no
+go-to: main_nomination
+
+The UCPF sadly did not agree however and decided to continue their present support.
+
+@endlf_support
+view-if: endlf_formed = 1 and endlf_pres_yes = 1 and endlf_pres_endorsement != 'slfp' and (endlf_coalition_id = -1 or endlf_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: endlf_support_yes if endlf_relation > 70; endlf_support_no 
+
+@endlf_support_yes
+on-arrival: endlf_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The ENDLF likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@endlf_support_no
+go-to: main_nomination
+
+The ENDLF sadly did not agree however and decided to continue their present support.
+
+@telo_support
+view-if: telo_formed = 1 and telo_pres_yes = 1 and telo_pres_endorsement != 'slfp' and (telo_coalition_id = -1 or telo_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: telo_support_yes if telo_relation > 70; telo_support_no 
+
+@telo_support_yes
+on-arrival: telo_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The TELO likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@telo_support_no
+go-to: main_nomination
+
+The TELO sadly did not agree however and decided to continue their present support.
+
+@eprlf_support
+view-if: eprlf_formed = 1 and eprlf_pres_yes = 1 and eprlf_pres_endorsement != 'slfp' and (eprlf_coalition_id = -1 or eprlf_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: eprlf_support_yes if eprlf_relation > 70; eprlf_support_no 
+
+@eprlf_support_yes
+on-arrival: eprlf_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The EPRLF likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@eprlf_support_no
+go-to: main_nomination
+
+The EPRLF sadly did not agree however and decided to continue their present support.
+
+@dunf_support
+view-if: dunf_formed = 1 and dunf_pres_yes = 1 and dunf_pres_endorsement != 'slfp' and (dunf_coalition_id = -1 or dunf_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: dunf_support_yes if dunf_relation > 70; dunf_support_no 
+
+@dunf_support_yes
+on-arrival: dunf_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The DUNF likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@dunf_support_no
+go-to: main_nomination
+
+The DUNF sadly did not agree however and decided to continue their present support.
+
+@ulpp_support
+view-if: ulpp_formed = 1 and ulpp_pres_yes = 1 and ulpp_pres_endorsement != 'slfp' and (ulpp_coalition_id = -1 or ulpp_coalition_id != slfp_coalition_id)
+max-visits: 1
+go-to: ulpp_support_yes if ulpp_relation > 70; ulpp_support_no 
+
+@ulpp_support_yes
+on-arrival: ulpp_pres_endorsement = 'slfp'
+go-to: main_nomination
+
+The ULPP likewise agreed to support [+ slfp_pres_candidate +] in the election.
+
+@ulpp_support_no
+go-to: main_nomination
+
+The ULPP sadly did not agree however and decided to continue their present support.

@@ -1,0 +1,100 @@
+title: Soviet Union Elections
+new-page: true
+max-visits: 1
+tags: event
+view-if: year = 1984 and month = 4 and week = 1
+on-arrival: {!
+    //soviet of the union 
+    var _unionData = [];
+    function _addUnion(id, legend, seats) {
+        if (seats && seats > 0) _unionData.push({ id: id, legend: legend, name: legend, seats: seats });
+    }
+    
+    _addUnion('cpsu', 'CPSU', 551);
+    _addUnion('ussrindependent', 'Independent', 199);
+    
+    var _unionSig = JSON.stringify(_unionData.map(function(p){ return p.id + p.seats; }));
+    window._ussrUnionData = _unionData;
+    window._ussrUnionAnimate = (_unionSig !== window._ussrUnionSig);
+    if (window._ussrUnionAnimate) window._ussrUnionSig = _unionSig;
+
+    //soviet of nationalities 
+    var _natData = [];
+    function _addNat(id, legend, seats) {
+        if (seats && seats > 0) _natData.push({ id: id, legend: legend, name: legend, seats: seats });
+    }
+    
+    _addNat('cpsu', 'CPSU', 521);
+    _addNat('ussrindependent', 'Independent', 229);
+    
+    var _natSig = JSON.stringify(_natData.map(function(p){ return p.id + p.seats; }));
+    window._ussrNatData = _natData;
+    window._ussrNatAnimate = (_natSig !== window._ussrNatSig);
+    if (window._ussrNatAnimate) window._ussrNatSig = _natSig;
+!}
+on-display: {!
+    window.showSceneImage('img/logos/USSR_Logo.png'); 
+    setTimeout(function() {
+    if (!d3 || !d3.parliament) return;
+    if (window._ussrUnionData && window._ussrUnionData.length > 0) {
+        var el1 = document.getElementById('ussr_union_diagram');
+        if (el1) {
+            var w1 = el1.parentElement.offsetWidth || 450;
+            var h1 = Math.round(w1 * 0.50);
+            el1.setAttribute('width', w1);
+            el1.setAttribute('height', h1);
+            
+            var parl1 = d3.parliament().width(w1).height(h1).innerRadiusCoef(0.4);
+            var anim1 = window._ussrUnionAnimate;
+            parl1.enter.fromCenter(anim1).smallToBig(anim1);
+            parl1.exit.toCenter(anim1).bigToSmall(anim1);
+            d3.select('#ussr_union_diagram').datum(window._ussrUnionData).call(parl1);
+        }
+    }
+    if (window._ussrNatData && window._ussrNatData.length > 0) {
+        var el2 = document.getElementById('ussr_nationalities_diagram');
+        if (el2) {
+            var w2 = el2.parentElement.offsetWidth || 450;
+            var h2 = Math.round(w2 * 0.50);
+            el2.setAttribute('width', w2);
+            el2.setAttribute('height', h2);
+            
+            var parl2 = d3.parliament().width(w2).height(h2).innerRadiusCoef(0.4);
+            var anim2 = window._ussrNatAnimate;
+            parl2.enter.fromCenter(anim2).smallToBig(anim2);
+            parl2.exit.toCenter(anim2).bigToSmall(anim2);
+            d3.select('#ussr_nationalities_diagram').datum(window._ussrNatData).call(parl2);
+        }
+    }
+}, 150);
+!}
+
+= 1984 Soviet Union Supreme Soviet elections
+
+The results are....
+
+<div style="text-align: center; margin: 1em 0;">
+    <img src="img/soviet_election/1984_ussr_election.svg" style="width: 100%; max-width: 500px;">
+</div>
+
+= Soviet of the Union
+
+{!<svg id="ussr_union_diagram" style="width: 100%; height: 100%; display: block; margin: 0 auto;"></svg>!}
+
+{!<table>!} 
+{!<tr><td>Party</td><td>Seats</td><td>Change</td></tr>!}
+{!<tr><td><div class="box" style='background-color:#b00600ff'> </div> !} <span class="mytooltip no-highlight"><span style="color: #b00600ff;">**CPSU**</span><span class="mytooltiptext"><img src="img/logos/CPSU_Logo.png"/>Communist Party of the Soviet Union<br>Коммунистическая партия Советского Союза</span></span> {!</td><td>!} 551 {!</td><td>!} +2 {!</td></tr>!} 
+{!<tr><td><div class="box" style='background-color:#1eafafff'> </div> !} *Independent* {!</td><td>!} 199 {!</td><td>!} -2 {!</td></tr>!} 
+{!</table>!}
+
+= Soviet of Nationalities
+
+{!<svg id="ussr_nationalities_diagram" style="width: 100%; height: 100%; display: block; margin: 0 auto;"></svg>!}
+
+{!<table>!} 
+{!<tr><td>Party</td><td>Seats</td><td>Change</td></tr>!}
+{!<tr><td><div class="box" style='background-color:#b00600ff'> </div> !} <span class="mytooltip no-highlight"><span style="color: #b00600ff;">**CPSU**</span><span class="mytooltiptext"><img src="img/logos/CPSU_Logo.png"/>Communist Party of the Soviet Union<br>Коммунистическая партия Советского Союза</span></span> {!</td><td>!} 521 {!</td><td>!} -5 {!</td></tr>!} 
+{!<tr><td><div class="box" style='background-color:#1eafafff'> </div> !} *Independent* {!</td><td>!} 229 {!</td><td>!} +5 {!</td></tr>!} 
+{!</table>!}
+
+Another "victory" for the ruling communist party, business as usual in the USSR

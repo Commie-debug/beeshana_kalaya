@@ -1,0 +1,87 @@
+title: UK General Elections
+new-page: true
+max-visits: 1
+tags: event
+view-if: year = 1983 and month = 6 and week = 1
+on-arrival: {!
+    // 1. Set the visual style (British mode uses circles, Saskatchewan mode uses paired desks)
+    Q.brit_mode = true; 
+    Q.house_width = 10;
+    Q.parties = ['tory', 'labour', 'liberaluk','sdp','uup','dup','snp','plaid','sdlp','sinnfein','upup'];
+
+    //government party 
+    Q.tory_seats = 397;
+    Q.tory_in_government = 1;
+
+    //opposition parties
+    Q.labour_seats = 209;
+    Q.labour_in_government = 0;
+    Q.liberaluk_seats = 17;
+    Q.liberaluk_in_government = 0;
+    Q.sdp_seats = 6;
+    Q.sdp_in_government = 0;
+    Q.snp_seats = 2;
+    Q.snp_in_government = 0;
+    Q.uup_seats = 11;
+    Q.uup_in_government = 0;
+    Q.dup_seats = 3;
+    Q.dup_in_government = 0;
+    Q.plaid_seats = 2;
+    Q.plaid_in_government = 0;
+    Q.sdlp_seats = 1;
+    Q.sdlp_in_government = 0;
+    Q.sinnfein_seats = 1;
+    Q.sinnfein_in_government = 0;
+    Q.upup_seats = 1;
+    Q.upup_in_government = 0;
+!}
+on-display: {!
+    window.showSceneImage('img/logos/UK_Logo.png'); 
+    setTimeout(function() {
+        window.westminster('uk_parliament_svg', false);
+    }, 100);
+!}
+
+= 1983 United Kingdom General Elections
+
+The results are....
+
+<div style="width: 100%; display: flex; justify-content: center; align-items: center;">
+    <svg id='uk_parliament_svg' viewBox="-100 -95 800 340" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"></svg>
+</div>
+
+
+{!<table>!} 
+{!<tr><td>Party/Coalition</td><td>Seats</td><td>Vote %</td><td>Change</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#0087DC'> </div> !} <span class="mytooltip no-highlight"><span style="color: #0087DC;">**Conservative Party**</span><span class="mytooltiptext"><img src="img/logos/UK/Tory_Logo.png"/>Conservative & Unionist Party</span</span> {!</td><td>!} 397 {!</td><td>!} 42.4% {!</td><td>!} +38 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#E4003B'> </div> !} <span class="mytooltip no-highlight"><span style="color: #E4003B;">**Labour Party**</span><span class="mytooltiptext"><img src="img/logos/UK/Labour_Logo.png"/>Labour Party</span</span> {!</td><td>!} 209 {!</td><td>!} 27.6% {!</td><td>!} -52 {!</td></tr>!} 
+
+{!<tr style="background-color: transparent;"><td><strong>!}SDP–Liberal Alliance{!</strong></td><td><strong>!}23{!</strong></td><td><strong>!}25.4%{!</strong></td><td></td></tr>!} 
+{!<tr><td style="padding-left: 20px;"><div class="box" style='background-color:#FAA61A'> </div> !} <span class="mytooltip no-highlight"><span style="color: #FAA61A;">**Liberal Party**</span><span class="mytooltiptext"><img src="img/logos/UK/Liberal_UK_Logo.png"/>Liberal Party</span</span> {!</td><td>!} 17 {!</td><td>!} 13.7% {!</td><td>!} +8 {!</td></tr>!} 
+{!<tr><td style="padding-left: 20px;"><div class="box" style='background-color:#7D26CD'> </div> !} <span class="mytooltip no-highlight"><span style="color: #7D26CD;">**SDP**</span><span class="mytooltiptext"><img src="img/logos/UK/SDP_Logo.png"/>Social Democratic Party</span</span> {!</td><td>!} 6 {!</td><td>!} 11.6% {!</td><td>!} +6 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#48A5EE'> </div> !} <span class="mytooltip no-highlight"><span style="color: #48A5EE;">**UUP**</span><span class="mytooltiptext"><img src="img/logos/UK/UUP_Logo.png"/>Ulster Unionist Party</span></span> {!</td><td>!} 11 {!</td><td>!} 0.8% {!</td><td>!} +2 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#D46A4C'> </div> !} <span class="mytooltip no-highlight"><span style="color: #D46A4C;">**DUP**</span><span class="mytooltiptext"><img src="img/logos/UK/DUP_Logo.png"/>Democratic Unionist Party</span></span> {!</td><td>!} 3 {!</td><td>!} 0.5% {!</td><td>!} +1 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#FDF38E'> </div> !} <span class="mytooltip no-highlight"><span style="color: #FDF38E;">**SNP**</span><span class="mytooltiptext"><img src="img/logos/UK/SNP_Logo.png"/>Scottish National Party</span></span> {!</td><td>!} 2 {!</td><td>!} 1.1% {!</td><td>!} 0 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#0AA77D'> </div> !} <span class="mytooltip no-highlight"><span style="color: #0AA77D;">**Plaid Cymru**</span><span class="mytooltiptext"><img src="img/logos/UK/Plaid_Cymru_Logo.png"/>Plaid Cymru</span></span> {!</td><td>!} 2 {!</td><td>!} 0.4% {!</td><td>!} 0 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#2AA82C'> </div> !} <span class="mytooltip no-highlight"><span style="color: #2AA82C;">**SDLP**</span><span class="mytooltiptext"><img src="img/logos/UK/SDLP_Logo.png"/>Social Democratic and Labour Party</span></span> {!</td><td>!} 1 {!</td><td>!} 0.4% {!</td><td>!} -1 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#008800'> </div> !} <span class="mytooltip no-highlight"><span style="color: #008800;">**Sinn Féin**</span><span class="mytooltiptext"><img src="img/logos/UK/Sinn_Féin_Logo.png"/>Sinn Féin</span></span> {!</td><td>!} 1 {!</td><td>!} 0.3% {!</td><td>!} +1 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#ffdead'> </div> !} <span class="mytooltip no-highlight"><span style="color: #ffdead;">**UPUP**</span><span class="mytooltiptext"><img src="img/logos/UK/UPUP_Logo.png"/>Ulster Popular Unionist Party</span></span> {!</td><td>!} 1 {!</td><td>!} 0.1% {!</td><td>!} +1 {!</td></tr>!} 
+
+{!</table>!}
+
+- @next: Prime Minister Margaret Thatcher and her Conservative Party have won a landslide victory to a second term in office. 
+
+@next
+
+Her rival Labour Party bled votes and seats to a new alliance between the social democrats and liberals.
+
+Overall this means a continuation of the Thatcher cabinet's policy of cooperation with Sri Lanka, the nature of this victory could embolden Thatcher to pursue even her goals both domestic and foreign with less restraint.

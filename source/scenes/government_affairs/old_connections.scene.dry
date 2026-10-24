@@ -1,0 +1,50 @@
+title: Old Connections
+new-page: true
+is-card: true
+max-visits: 100
+view-if: opposition_timer <= 0 and slfp_in_government = 0
+on-arrival: opposition_timer += 6; month_actions += 1
+tags: govt_affairs
+card-image: img/opposition.jpg
+subtitle: What can we learn?
+
+= Old Connections
+
+While the SLFP isnt is power at the moment, many of our allies within the civil service, military and various other branches of the government remain intact under UNP rule. Allies appointed or brought to power during our several stints in control. They may prove to be a valuable way to gain information and support, or maybe even more?
+
+- @military_info: "Malli, i need information on the military"
+- @tamil_info: "Uncle, your son works at CID right, i need information on the north-east"
+- @foreign_info: "Akka, i need up to date information from the foreign ministry"
+- @india_info: "Putha, i need more information from the [? if nib_formed == 0 : CID ?][? if nib_formed == 1 : NIB ?] about India"
+- @econ_info: "Aiya, can you hook me up with the latest economic chits?"
+
+
+@military_info
+subtitle: -2 resources, we will get information on the military for 1 year
+choose-if: resources >= 2
+unavailable-subtitle: Not enough resources.
+on-arrival: resources -= 2; 
+
+@tamil_info
+subtitle: -3 resources, we will get information on the north-east for 1 year
+choose-if: resources >= 3
+unavailable-subtitle: Not enough resources.
+on-arrival: resources -= 3; 
+
+@india_info
+subtitle: -2 resources, we will get information on India for 1 year
+choose-if: resources >= 2
+unavailable-subtitle: Not enough resources.
+on-arrival: resources -= 2; 
+
+@econ_info
+subtitle: -3 resources, we will get information on the military for 1 year
+choose-if: resources >= 3
+unavailable-subtitle: Not enough resources.
+on-arrival: resources -= 3; 
+
+@foreign_info
+subtitle: -1 resources, we will get information on foreign affairs for 1 year
+choose-if: resources >= 1
+unavailable-subtitle: Not enough resources.
+on-arrival: resources -= 1; 

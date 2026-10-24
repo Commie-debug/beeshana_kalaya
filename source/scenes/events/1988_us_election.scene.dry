@@ -1,0 +1,38 @@
+title: United States Presidential Elections
+new-page: true
+max-visits: 1
+tags: event
+view-if: year = 1988 and month = 11 and week = 1
+on-arrival: {!
+!}
+on-display: {!
+    window.showSceneImage('img/logos/USA_Logo.png'); 
+!}
+
+= 1988 United States Presidential Elections
+
+The results are....
+
+<div style="text-align: center; margin: 1em 0;">
+    <img src="img/us_election/1988_pres_election.svg" style="width: 100%; max-width: 500px;">
+</div>
+
+
+{!<table>!} 
+{!<tr><td>Candidate</td><td>Party</td><td>Electoral College Votes</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#e81c23'> </div> !} George H W Bush {!</td><td>!} <span class="mytooltip no-highlight"><span style="color: #e81c23;">**Republican**</span><span class="mytooltiptext"><img src="img/logos/US/Republican_Logo.png"/>Republican Party (Grand Old Party)</span</span> {!</td><td>!} 426 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#0044ca'> </div> !} Michael Dukakis {!</td><td>!} <span class="mytooltip no-highlight"><span style="color: #0044ca;">**Democratic**</span><span class="mytooltiptext"><img src="img/logos/US/Democratic_Logo.png"/>Democratic Party</span</span> {!</td><td>!} 111 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#aaccffff'> </div> !} Lloyd Bentsen {!</td><td>!} <span class="mytooltip no-highlight"><span style="color: #0044ca;">**Democratic**</span><span class="mytooltiptext"><img src="img/logos/US/Democratic_Logo.png"/>Democratic Party</span</span> {!</td><td>!} 1 (Faithless elector) {!</td></tr>!} 
+
+{!</table>!}
+
+- @next: Vice President George H W Bush has won the presidential election, securing a third consecutive Republican term in the White House.
+
+@next
+
+His Democratic party rival Michael Dukakis seemingly failed to capitalise on dissatisfaction with the outgoing administration with Bush having presented himself as the natural successor to Reagan's political legacy.
+
+This means a continuation of the Reagan administration's general direction, particularly in foreign policy and economic affairs, though Bush may seek to establish a more pragmatic approach of his own. The Republican victory ensures that Washington's existing course will remain largely intact.

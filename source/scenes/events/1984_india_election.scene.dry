@@ -1,0 +1,125 @@
+title: Indian General Elections
+new-page: true
+max-visits: 1
+tags: event
+view-if: year = 1984 and month = 12 and week = 3
+on-arrival: {!
+    var _unionData = [];
+    function _addLK(id, legend, seats) {
+        if (seats && seats > 0) _unionData.push({ id: id, legend: legend, name: legend, seats: seats });
+    }
+    
+    _addLK('inc', 'INC', 404);
+    _addLK('indiatdp', 'TDP', 30);
+    _addLK('indiacpim', 'CPI(M)', 22);
+    _addLK('aiadmk', 'AIADMK', 12);
+    _addLK('indiajnp', 'JNP', 10);
+    _addLK('indiacpi', 'CPI(M)', 6);  
+    _addLK('indiacongresssocialist', 'CongressSocialist', 2);  
+    _addLK('indialokdal', 'Lokdal', 3);  
+    _addLK('indiarsp', 'RSP', 3);  
+    _addLK('indiajknc', 'JKNC', 2);  
+    _addLK('indiabjp', 'BJP', 2);  
+    _addLK('dmk', 'DMK', 2);
+    _addLK('indiaallindiaforward', 'AIFB', 2);  
+    _addLK('indiaiuml', 'IUML', 2); 
+    _addLK('indiakeralacongress', 'KeralaCongress(J)', 1); 
+    _addLK('indiaincj', 'Congress(J)', 1); 
+    _addLK('indiapwpi', 'PWPI', 1); 
+    _addLK('independent', 'independent', 5);
+    _addLK('indiaangloindian', 'Anglo', 2);
+
+    var _unionSig = JSON.stringify(_unionData.map(function(p){ return p.id + p.seats; }));
+    window._ussrUnionData = _unionData;
+    window._ussrUnionAnimate = (_unionSig !== window._ussrUnionSig);
+    if (window._ussrUnionAnimate) window._ussrUnionSig = _unionSig;
+!}
+on-display: {!
+    window.showSceneImage('img/logos/India_Logo.png'); 
+    setTimeout(function() {
+    if (!d3 || !d3.parliament) return;
+    if (window._ussrUnionData && window._ussrUnionData.length > 0) {
+        var el1 = document.getElementById('tamil_nadu_diagram');
+        if (el1) {
+            var w1 = el1.parentElement.offsetWidth || 450;
+            var h1 = Math.round(w1 * 0.50);
+            el1.setAttribute('width', w1);
+            el1.setAttribute('height', h1);
+            
+            var parl1 = d3.parliament().width(w1).height(h1).innerRadiusCoef(0.4);
+            var anim1 = window._ussrUnionAnimate;
+            parl1.enter.fromCenter(anim1).smallToBig(anim1);
+            parl1.exit.toCenter(anim1).bigToSmall(anim1);
+            d3.select('#tamil_nadu_diagram').datum(window._ussrUnionData).call(parl1);
+        }
+    }
+}, 150);
+!}
+
+= 1984 Indian General Elections
+
+The results are....
+
+= Alliance map
+
+<div style="text-align: center; margin: 1em 0;">
+    <img src="img/india_election/india_election_1984.svg" style="width: 100%; max-width: 500px;">
+</div>
+
+= Lok Sabha (Lower house of the Indian parliament)
+
+{!<svg id="tamil_nadu_diagram" style="width: 100%; height: 100%; display: block; margin: 0 auto;"></svg>!}
+
+{!<table>!} 
+{!<tr><td>Party/Coalition</td><td>Seats</td><td>Vote %</td><td>Change</td></tr>!}
+
+{!<tr><td><div class="box" style='background-color:#76D7EA'> </div> !} INC {!</td><td>!} 404 {!</td><td>!} 49.1% {!</td><td>!} +61 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#FFED00'> </div> !} <span class="mytooltip no-highlight"><span style="color: #FFED00;">**TDP**</span><span class="mytooltiptext"><img src="img/logos/India/Telugu_Desam_Logo.png"/>Telugu Desam Party<br>తెలుగు దేశం పార్టీ</span></span> {!</td><td>!} 30 {!</td><td>!} 4.31% {!</td><td>!} 0 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#CC0D0E'> </div> !} <span class="mytooltip no-highlight"><span style="color: #CC0D0E;">**CPI(M)**</span><span class="mytooltiptext"><img src="img/logos/India/CPI_M_Logo.png"/>Communist Party of India (Marxist)</span></span> {!</td><td>!} 22 {!</td><td>!} 5.87% {!</td><td>!} -15 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#00FF00'> </div> !} AIADMK {!</td><td>!} 12 {!</td><td>!} 1.69% {!</td><td>!} +10 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#1F75FE'> </div> !} <span class="mytooltip no-highlight"><span style="color: #1F75FE;">**JNP**</span><span class="mytooltiptext"><img src="img/logos/India/JNP_Logo.png"/>Janata Party<br>People's Party</span></span> {!</td><td>!} 10 {!</td><td>!} 6.89% {!</td><td>!} -21 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#F50122'> </div> !} <span class="mytooltip no-highlight"><span style="color: #b00600ff;">**CPI**</span><span class="mytooltiptext"><img src="img/logos/India/CPI_Logo.png"/>Communist Party of India</span></span> {!</td><td>!} 6 {!</td><td>!} 2.6% {!</td><td>!} -5 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#808080'> </div> !} **Independent** {!</td><td>!} 5 {!</td><td>!} 7.92% {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#404dff'> </div> !} <span class="mytooltip no-highlight"><span style="color: #404dff;">**Indian Congress (Socialist)**</span><span class="mytooltiptext"><img src="img/logos/India/Congress_Socialist_Logo.png"/>Indian Congress (Socialist)</span></span> {!</td><td>!} 4 {!</td><td>!} 1.52% {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#01FF66'> </div> !} <span class="mytooltip no-highlight"><span style="color: #01FF66;">**Lokdal**</span><span class="mytooltiptext"><img src="img/logos/India/Lok_Dal_Logo.png"/>Lok Dal<br>(People's Faction)</span></span> {!</td><td>!} 3 {!</td><td>!} 5.97% {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#D84C4C'> </div> !} <span class="mytooltip no-highlight"><span style="color: #D84C4C;">**RSP**</span><span class="mytooltiptext"><img src="img/logos/India/RSP_Logo.png"/>Revolutionary Socialist Party</span></span> {!</td><td>!} 3 {!</td><td>!} 0.5% {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#922B3E'> </div> !} <span class="mytooltip no-highlight"><span style="color: #922B3E;">**JKNC**</span><span class="mytooltiptext"><img src="img/logos/India/JKNC_Logo.png"/>Jammu & Kashmir National Conference</span></span> {!</td><td>!} 3 {!</td><td>!} 0.43% {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#FF9933'> </div> !} <span class="mytooltip no-highlight"><span style="color: #FF9933;">**BJP**</span><span class="mytooltiptext"><img src="img/logos/India/BJP_Logo.png"/>Bharatiya Janata Party<br>(Indian People's Party)</span></span> {!</td><td>!} 2 {!</td><td>!} 7.74% {!</td><td>!} 0 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#FF0000'> </div> !} DMK {!</td><td>!} 2 {!</td><td>!} 2.42% {!</td><td>!} -14 {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#AC1314'> </div> !} <span class="mytooltip no-highlight"><span style="color: #AC1314;">**AIFB**</span><span class="mytooltiptext"><img src="img/logos/India/All_India_Forward_Bloc.png"/>All India Forward Bloc</span></span> {!</td><td>!} 2 {!</td><td>!} 0.45% {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#016600'> </div> !} <span class="mytooltip no-highlight"><span style="color: #016600;">**IUML**</span><span class="mytooltiptext"><img src="img/logos/India/IUML_Logo.png"/>Indian Union Muslim League</span></span> {!</td><td>!} 2 {!</td><td>!} 0.28% {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#809FFF'> </div> !} <span class="mytooltip no-highlight"><span style="color: #809FFF;">**K-Congress(J)**</span><span class="mytooltiptext"><img src="img/logos/India/Kerala_Congress_Logo.png"/>Kerala Congress (Joseph)</span></span> {!</td><td>!} 2 {!</td><td>!} 0.25% {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#ceccb2'> </div> !} <span class="mytooltip no-highlight"><span style="color: #ceccb2;">**Nominated Anglo-Indians **</span> {!</td><td>!} 2 {!</td><td>!}  {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#00CCFF'> </div> !} <span class="mytooltip no-highlight"><span style="color: #00CCFF;">**Congress(J)**</span><span class="mytooltiptext"><img src="img/logos/India/INC_Logo.png"/>Indian National Congress (Jagjivan)</span></span> {!</td><td>!} 1 {!</td><td>!} 0.64% {!</td><td>!}  {!</td></tr>!} 
+
+{!<tr><td><div class="box" style='background-color:#E77474'> </div> !} <span class="mytooltip no-highlight"><span style="color: #E77474;">**PWPI**</span><span class="mytooltiptext"><img src="img/logos/India/PWPI_Logo.png"/>Peasants and Workers Party of India</span></span> {!</td><td>!} 1 {!</td><td>!} 0.2% {!</td><td>!} +1 {!</td></tr>!} 
+
+{!</table>!}
+
+- @next: A landslide victory for Prime Minister Rajiv Gandhi and the INC.
+
+@next
+on-arrival: india_pm = "Rajiv Gandhi"; india_government = "INC"; 
+
+Following the sudden assassination of Indira Gandhi, the popularity of her INC and her son the interim Prime Minister Rajiv Gandhi. This combined with a general fear of growing instability has catapulted the INC to its largest victory ever since independence.
+
+Voting in the states of Punjab and Assam have been delayed to an unknown time due to the Sikh insurgency and the "Anti-Foreigners Movement" respectively. 
+
+It was already suspected that India under Indira was covertly supporting the Tamil militants and that assumption is likely to continue under Rajiv. Though it should be reminded that both Prime Ministers are far from proposing extraordinary measures such as a direct Indian intervention unlike politicians in Tamil Nadu like MGR.

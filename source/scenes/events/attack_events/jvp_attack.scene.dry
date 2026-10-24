@@ -1,0 +1,10 @@
+title: The JVP Offensive
+
+= The JVP
+
+The JVP leaders have not forgotten the bloody crackdown following 1971's revolt.
+
+- @moveon: We are immedietly faced with a decline in our support among rural Sri Lankan's who already support the JVP.
+
+@moveon
+on-arrival: rural_slfp -= 2; workers_slfp -= 1.5; 

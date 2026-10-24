@@ -1,0 +1,10 @@
+title: The UNP Offensive
+
+= The UNP
+
+The UNP has launched a massive media blitz on us, attacking the SLFP as weak, corrupt, and completely incompetent. The media opinion pieces remind readers of the UNP's the economic successes under their tenure in contrast to the economic difficulties faced during our previous time in power.
+
+- @moveon: We are immedietly faced with a decline in our support among almost all groups.
+
+@moveon
+on-arrival: other_slfp -= 1.5; itamil_slfp -= 1.5; muslim_slfp -= 1.5; sinhala_slfp -= 1.5; sltamil_slfp -= 1.5; rural_slfp -= 1.5; upper_slfp -= 1.5; workers_slfp -= 1.5; middle_slfp -= 1.5;   

@@ -1,0 +1,6 @@
+
+(..0.2) <span style="color: #008000;">**Very low**</span>
+(0.2..0.4) <span style="color: #9ACD32;">**Low**</span>
+(0.4..0.6) <span style="color: #FFD700;">**Medium**</span>
+(0.6..0.8) <span style="color: #FF4500;">**High**</span>
+(0.8..) <span style="color: #FF0000;">**Very high**</span>
